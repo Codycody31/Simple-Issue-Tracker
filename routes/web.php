@@ -18,14 +18,9 @@ use Inertia\Inertia;
 
 // If user is not logged in, redirect to login page
 Route::middleware(['auth'])->group(function () {
-    // Home
+    // Home, redirect to dashboard
     Route::get('/', function () {
-        return Inertia::render('Welcome', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
+        return redirect()->route('dashboard');
     })->name('home');
 
     // Dashboard
@@ -34,9 +29,9 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 
     // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/manage-account', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/manage-account', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/manage-account', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__ . '/auth.php';
