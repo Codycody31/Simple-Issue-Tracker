@@ -13,15 +13,10 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->integer('comment_id')->primary();
-            $table->integer('issue_id');
+            $table->foreignId('issue_id')->constrained('issues');
             $table->text('comment');
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
-        });
-
-        // Set foreign keys
-        Schema::table('comments', function (Blueprint $table) {
-            $table->foreign('issue_id')->references('issue_id')->on('issues');
         });
     }
 

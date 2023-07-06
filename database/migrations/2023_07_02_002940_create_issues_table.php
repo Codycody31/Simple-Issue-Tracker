@@ -12,18 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('issues', function (Blueprint $table) {
-            $table->integer('issue_id')->primary();
+            $table->id();
             $table->string('title');
             $table->string('description');
-            $table->integer('department_id');
+            $table->foreignId('department_id')->constrained('departments');
             $table->foreignId('user_id')->constrained();
             $table->integer('status')->default(0);
             $table->timestamps();
-        });
-
-        // Set foreign keys
-        Schema::table('issues', function (Blueprint $table) {
-            $table->foreign('department_id')->references('department_id')->on('departments');
         });
     }
 

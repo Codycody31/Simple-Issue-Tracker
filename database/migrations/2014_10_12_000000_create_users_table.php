@@ -20,15 +20,10 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->integer('department_id')->nullable();
+            $table->foreignId('department_id')->constrained('departments');
             $table->integer('type')->nullable();
             $table->text('designation');
             $table->timestamps();
-        });
-
-        // Set foreign keys
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreign('department_id')->references('department_id')->on('departments');
         });
     }
 
