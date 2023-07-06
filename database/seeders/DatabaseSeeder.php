@@ -12,13 +12,84 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        // Create departments
+        \App\Models\Department::factory()->createMany(
+            [
+                [
+                    'name' => 'IT Department',
+                    'description' => 'Information Technology Department',
+                ],
+                [
+                    'name' => 'HR Department',
+                    'description' => 'Human Resources Department',
+                ],
+                [
+                    'name' => 'Finance Department',
+                    'description' => 'Finance Department',
+                ],
+                [
+                    'name' => 'Marketing',
+                    'description' => 'Marketing Department',
+                ]
+            ]
+        );
 
-        // Create a default admin user
-        \App\Models\User::factory()->create([
-            'fullname' => 'Administrator',
-            'email' => 'admin@localhost.com',
-            'password' => bcrypt('password'),
-        ]);
+        // Create users
+        \App\Models\User::factory()->createMany(
+            [
+                [
+                    'fullname' => 'Administrator',
+                    'email' => 'admin@sample.com',
+                    'contact' => '09123456789',
+                    'username' => 'admin',
+                    'password' => bcrypt('0192023a7bbd73250516f069df18b500'),
+                    'department_id' => 1,
+                    'type' => 1,
+                    'designation' => 'System Administrator',
+                ],
+                [
+                    'fullname' => 'John Smith',
+                    'email' => 'jsmith@sample.com',
+                    'contact' => 'jsmith',
+                    'username' => 'jsmith',
+                    'password' => bcrypt('39ce7e2a8573b41ce73b5ba41617f8f7'),
+                    'department_id' => 1,
+                    'type' => 2,
+                    'designation' => 'Programmer',
+                ],
+                [
+                    'fullname' => 'Claire Blake',
+                    'email' => 'cblake@gmail.com',
+                    'contact' => '09123456789',
+                    'username' => 'cblake',
+                    'password' => bcrypt('cd74fae0a3adf459f73bbf187607ccea'),
+                    'department_id' => 2,
+                    'type' => 2,
+                    'designation' => 'Mktg. Manager',
+                ]
+            ]
+        );
+
+        // Create issues
+        \App\Models\Issue::factory()->createMany(
+            [
+                [
+                    'title' => 'Sample Issue',
+                    'description' => 'This is only a sample issue.',
+                    'department_id' => 2,
+                    'user_id' => 2,
+                    'status' => 1,
+                ],
+                [
+                    'title' => 'Issue 102',
+                    'description' => 'This is a sample issue only 102.
+
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ullamcorper tellus eu condimentum accumsan. Ut tempus rutrum tortor eget hendrerit. Quisque consectetur risus ac leo ullamcorper efficitur. Praesent aliquet sem commodo risus pharetra, quis convallis lorem tincidunt. Praesent scelerisque mollis magna.',
+                    'department_id' => 2,
+                    'user_id' => 2,
+                    'status' => 0,
+                ]
+            ]
+        );
     }
 }
