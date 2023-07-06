@@ -9,3 +9,12 @@ This is a simple issue tracker system, originally found [here](https://www.sourc
 ## Files
 
 You can find the OG code at [VMG Datacenter](https://datacenter-api.vahngomes.dev/general/public/Simple-Issue-Tracker/issue_tracker.zip). The original code is not mine.
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
