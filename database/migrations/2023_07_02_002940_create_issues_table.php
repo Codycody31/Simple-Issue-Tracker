@@ -16,9 +16,14 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->integer('department_id');
-            $table->integer('user_id');
+            $table->foreignId('user_id')->constrained();
             $table->integer('status')->default(0);
             $table->timestamps();
+        });
+
+        // Set foreign keys
+        Schema::table('issues', function (Blueprint $table) {
+            $table->foreign('department_id')->references('department_id')->on('departments');
         });
     }
 

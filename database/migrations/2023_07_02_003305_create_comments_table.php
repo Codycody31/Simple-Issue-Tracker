@@ -15,8 +15,13 @@ return new class extends Migration
             $table->integer('comment_id')->primary();
             $table->integer('issue_id');
             $table->text('comment');
-            $table->integer('user_id');
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
+        });
+
+        // Set foreign keys
+        Schema::table('comments', function (Blueprint $table) {
+            $table->foreign('issue_id')->references('issue_id')->on('issues');
         });
     }
 

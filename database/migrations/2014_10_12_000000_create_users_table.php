@@ -25,6 +25,11 @@ return new class extends Migration
             $table->text('designation');
             $table->timestamps();
         });
+
+        // Set foreign keys
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('department_id')->references('department_id')->on('departments');
+        });
     }
 
     /**

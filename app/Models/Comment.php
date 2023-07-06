@@ -34,4 +34,20 @@ class Comment extends Model
      * @var array<string, string>
      */
     protected $casts = [];
+
+    /**
+     * Get the issue that owns the comment.
+     */
+    public function issue()
+    {
+        return $this->belongsTo(Issue::class);
+    }
+
+    /**
+     * Get the user that owns the comment.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
