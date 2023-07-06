@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('issues', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
+            $table->text('description');
             $table->foreignId('department_id')->constrained('departments');
             $table->foreignId('user_id')->constrained();
             $table->integer('status')->default(0);
