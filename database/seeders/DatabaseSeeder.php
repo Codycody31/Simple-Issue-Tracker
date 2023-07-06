@@ -91,5 +91,26 @@ class DatabaseSeeder extends Seeder
                 ]
             ]
         );
+
+        // Create issue comments
+        \App\Models\Comment::factory()->createMany(
+            [
+                [
+                    'issue_id' => 1,
+                    'comment' => 'Sample Comment 101',
+                    'user_id' => 2,
+                ],
+                [
+                    'issue_id' => 1,
+                    'comment' => 'We will fix this issue',
+                    'user_id' => 3,
+                ],
+                [
+                    'issue_id' => 2,
+                    'comment' => 'Sample Comment',
+                    'user_id' => 2,
+                ]
+            ]
+        );
     }
 }
