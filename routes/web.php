@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\IssueController;
+use App\Http\Controllers\IssueCommentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/issues', [IssueController::class, 'store'])->name('issues.store');
     Route::get('/issues/{issue}', [IssueController::class, 'show'])->name('issues.show');
 
+    // Issue Comments
+    Route::post('/issues/{issueId}/comments', [IssueCommentsController::class, 'store'])->name('issues.comments.store');
+    Route::delete('/issues/{issueId}/comments/{commentId}', [IssueCommentsController::class, 'destroy'])->name('issues.comments.destroy');
+    
     // Profile
     Route::get('/manage-account', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/manage-account', [ProfileController::class, 'update'])->name('profile.update');

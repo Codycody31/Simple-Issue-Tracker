@@ -1,12 +1,14 @@
 <script>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import InputError from "@/Components/InputError.vue";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 
 export default {
     components: {
         AuthenticatedLayout,
         Head,
         Link,
+        InputError,
     },
     layout: AuthenticatedLayout,
     props: {
@@ -14,6 +16,51 @@ export default {
             type: Object,
             required: true,
         },
+    },
+    setup(props) {
+        const commentForm = useForm({
+            comment: "",
+        });
+
+        const handleCommentSubmit = () => {
+            // Make the API call to submit the comment using the `post` function
+            commentForm.post(route("issues.comments.store", props.issue.id), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Reset the form after success
+                    commentForm.reset();
+
+                    // Log
+                    console.log(
+                        "Comment submitted for issue " + props.issue.id
+                    );
+                },
+                onError: () => {
+                    // Log
+                    console.log(
+                        "Error submitting comment for issue " + props.issue.id
+                    );
+                },
+                onFinish: () => {
+                    // Log
+                    console.log(
+                        "Finished submitting comment for issue " +
+                            props.issue.id
+                    );
+                },
+            });
+        };
+
+        const resetCommentForm = () => {
+            // Reset the form using the `reset` function
+            commentForm.reset();
+        };
+
+        return {
+            commentForm,
+            handleCommentSubmit,
+            resetCommentForm,
+        };
     },
     methods: {
         /**
@@ -164,13 +211,20 @@ export default {
                                 >
                                     Edit
                                 </button>
-                                <button
+                                <Link
                                     class="btn btn-sm btn-danger delete_comment rounded-0 col-auto"
                                     type="button"
-                                    :data-id="comment.id"
+                                    :href="
+                                        route('issues.comments.destroy', [
+                                            issue.id,
+                                            comment.id,
+                                        ])
+                                    "
+                                    method="delete"
+                                    as="button"
                                 >
                                     Delete
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </li>
@@ -185,35 +239,32 @@ export default {
         </div>
         <div class="row">
             <div class="col-md-8">
-                <form action="" id="comment-form">
+                <form id="comment-form" @submit.prevent="handleCommentSubmit">
                     <div class="form-group">
-                        <input
-                            type="hidden"
-                            name="issue_id"
-                            value="<?php echo $res['issue_id'] ?>"
-                        />
-                        <input type="hidden" name="id" />
                         <textarea
+                            v-model="commentForm.comment"
                             name="comment"
                             id="comment"
                             rows="4"
-                            class="form-control rounded-0"
+                            class="form-control rounded-1"
                             required
                             placeholder="Write your comment here."
                         ></textarea>
+                        <InputError :message="commentForm.errors.comment" />
                     </div>
                     <div class="form-group row justify-content-end py-2 px-3">
                         <button
                             class="btn btn-sm rounded-0 btn-primary col-auto me-2"
+                            :disabled="commentForm.processing"
                         >
                             Save
                         </button>
                         <button
                             class="btn btn-sm rounded-0 btn-secondary col-auto"
                             type="button"
-                            onclick="$('#comment-form').get(0).reset()"
+                            @click="resetCommentForm"
                         >
-                            Cancel
+                            Reset
                         </button>
                     </div>
                 </form>
