@@ -12,7 +12,7 @@ const showingNavigationDropdown = ref(false);
             <div class="container">
                 <Link class="navbar-brand" :href="route('dashboard')">
                     <img
-                        src="@/assets/imgs/Simple Issue Tracker.png"
+                        src="@/assets/imgs/Simple-Issue-Tracker.png"
                         alt="Issue Tracker"
                         width="30"
                         height="30"
