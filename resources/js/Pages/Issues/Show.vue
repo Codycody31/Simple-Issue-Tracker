@@ -110,17 +110,19 @@ export default {
         >
             Close Issue
         </button>
-        <button
+        <Link
             class="btn btn-sm btn-danger delete_data rounded-0 col-auto"
             type="button"
-            :data-id="issue.id"
+            :href="route('issues.destroy', issue.id)"
+            method="delete"
+            as="button"
             v-if="
                 $page.props.auth.user.type == 1 ||
                 $page.props.auth.user.id == issue.user_id
             "
         >
             Delete Issue
-        </button>
+        </Link>
     </div>
     <div class="row">
         <div class="col-md-12">

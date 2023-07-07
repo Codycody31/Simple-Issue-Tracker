@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/issues/create', [IssueController::class, 'create'])->name('issues.create');
     Route::post('/issues', [IssueController::class, 'store'])->name('issues.store');
     Route::get('/issues/{issue}', [IssueController::class, 'show'])->name('issues.show');
+    Route::delete('/issues/{issue}', [IssueController::class, 'destroy'])->name('issues.destroy');
 
     // Issue Comments
     Route::post('/issues/{issueId}/comments', [IssueCommentsController::class, 'store'])->name('issues.comments.store');
