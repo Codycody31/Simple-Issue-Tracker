@@ -8,7 +8,7 @@ This is a simple issue tracker system, originally found [here](https://www.sourc
 
 ## Files
 
-You can find the OG code at [VMG Datacenter](https://datacenter-api.vahngomes.dev/general/public/Simple-Issue-Tracker/issue_tracker.zip). The original code is not mine.
+You can find the OG code at [VMG Datacenter](https://datacenter-api.vahngomes.dev/general/public/Simple-Issue-Tracker/issue_tracker.zip). The original code is not mine. You can locate the icons here: [Icons](https://datacenter-api.vahngomes.dev/general/public/Simple-Issue-Tracker/Icons.zip).
 
 ## Contributing
 
