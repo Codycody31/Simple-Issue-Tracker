@@ -53,7 +53,14 @@ const showingNavigationDropdown = ref(false);
                         <?php endif; ?>
                         -->
                         <li class="nav-item">
-                            <a class="nav-link" href="./?page=issues">Issues</a>
+                            <Link
+                                class="nav-link"
+                                :href="route('issues.index')"
+                                :class="{
+                                    active: route().current('issues.index'),
+                                }"
+                                >Issues</Link
+                            >
                         </li>
                         <!--
                         <?php if ($_SESSION['type'] != 1) : ?>
