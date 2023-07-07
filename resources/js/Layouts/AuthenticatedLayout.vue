@@ -7,6 +7,7 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <main>
+        <!-- Top Navigation -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient">
             <div class="container">
                 <Link class="navbar-brand" :href="route('dashboard')">
@@ -86,6 +87,8 @@ const showingNavigationDropdown = ref(false);
                 </div>
             </div>
         </nav>
+
+        <!-- Content -->
         <div class="container py-5">
             <slot />
         </div>
