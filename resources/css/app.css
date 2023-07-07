@@ -1,5 +1,3 @@
 @tailwind base;
 @tailwind components;
-
-/* TODO: Tailwind utility classes overwrite bootstrap classes, so we need to fix this. */
 @tailwind utilities;

@@ -31,11 +31,16 @@ const showingNavigationDropdown = ref(false);
                 >
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="./"
-                                >Home</a
+                            <Link
+                                class="nav-link"
+                                :href="route('dashboard')"
+                                :class="{
+                                    active: route().current('dashboard'),
+                                }"
+                                >Dashboard</Link
                             >
                         </li>
                         <!-- <?php if ($_SESSION['type'] == 1) : ?>
