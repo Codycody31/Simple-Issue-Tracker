@@ -85,4 +85,35 @@ class IssueController extends Controller
         // Return issues
         return Redirect::route('issues.index')->with('success', 'Issue deleted successfully.');
     }
+
+    /**
+     * Update issue status (open/closed).
+     * 
+     * @param int $issueId The issue id
+     * @param int $statusId The status id
+     * @return void
+     */
+    public function updateStatus($issueId, $statusId)
+    {
+        // Get issue
+        $issue = Issue::findOrFail($issueId)->load('user', 'department', 'comments');
+
+        // Validate if user is authorized to access issue
+        if (!$issue || ($issue->user_id !== auth()->user()->id && $issue->department_id !== auth()->user()->department_id && auth()->user()->type !== 1)) {
+            return redirect()->route('issues.index')->with('error', 'This issue does not exist or you are not authorized to access it.');
+        }
+
+        // Validate status
+        if ($statusId != 0 && $statusId != 1) {
+            return redirect()->route('issues.show', $issue->id)->with('error', 'Invalid status.');
+        }
+
+        // Update issue status
+        $issue->update([
+            'status' => $statusId,
+        ]);
+
+        // Return issues
+        return Redirect::route('issues.show', $issue->id)->with('success', 'Issue status updated successfully.');
+    }
 }

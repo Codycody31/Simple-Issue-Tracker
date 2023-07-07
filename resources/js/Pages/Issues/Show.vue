@@ -98,18 +98,34 @@ export default {
     <Head :title="'Issue: ' + issue.title" />
 
     <div class="row justify-content-end px-3 mb-2">
-        <button
+        <Link
             class="btn btn-sm btn-primary me-2 close_issue rounded-0 col-auto"
             type="button"
-            :data-id="issue.id"
+            :href="route('issues.updateStatus', [issue.id, 1])"
+            method="patch"
+            as="button"
             v-if="
-                $page.props.auth.user.type == 1 ||
+                ($page.props.auth.user.type == 1 && issue.status == 0) ||
                 ($page.props.auth.user.department_id == issue.department_id &&
                     issue.status == 0)
             "
         >
             Close Issue
-        </button>
+        </Link>
+        <Link
+            class="btn btn-sm btn-success me-2 open_issue rounded-0 col-auto"
+            type="button"
+            :href="route('issues.updateStatus', [issue.id, 0])"
+            method="patch"
+            as="button"
+            v-if="
+                ($page.props.auth.user.type == 1 && issue.status == 1) ||
+                ($page.props.auth.user.department_id == issue.department_id &&
+                    issue.status == 1)
+            "
+        >
+            Open Issue
+        </Link>
         <Link
             class="btn btn-sm btn-danger delete_data rounded-0 col-auto"
             type="button"
