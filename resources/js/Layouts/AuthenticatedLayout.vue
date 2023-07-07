@@ -11,7 +11,14 @@ const showingNavigationDropdown = ref(false);
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient">
             <div class="container">
                 <Link class="navbar-brand" :href="route('dashboard')">
-                    Simple Issue Tracker
+                    <img
+                        src="@/assets/imgs/Simple Issue Tracker.png"
+                        alt="Issue Tracker"
+                        width="30"
+                        height="30"
+                        class="d-inline-block align-top"
+                    />
+                    Issue Tracker
                 </Link>
                 <button
                     class="navbar-toggler"
