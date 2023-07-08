@@ -43,6 +43,30 @@ const showingNavigationDropdown = ref(false);
                                 >Dashboard</Link
                             >
                         </li>
+                        <li
+                            class="nav-item"
+                            v-if="$page.props.auth.user.type == 1"
+                        >
+                            <Link
+                                class="nav-link"
+                                :href="route('departments.index')"
+                                :class="{
+                                    active: route().current('departments.index'),
+                                }"
+                                >Department</Link
+                            >
+                        </li>
+                        <li
+                            class="nav-item"
+                            v-if="$page.props.auth.user.type == 1"
+                        >
+                            <a
+                                class="nav-link <?php echo ($page == 'users') ? 'active' : '' ?>"
+                                aria-current="page"
+                                href="./?page=users"
+                                >Users</a
+                            >
+                        </li>
                         <!-- <?php if ($_SESSION['type'] == 1) : ?>
                             <li class="nav-item">
                                 <a class="nav-link <?php echo ($page == 'department') ? 'active' : '' ?>" aria-current="page" href="./?page=department">Department</a>

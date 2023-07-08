@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueCommentsController;
+use App\Http\Controllers\DepartmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    // Departments
+    Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
 
     // Issues
     Route::get('/issues', [IssueController::class, 'index'])->name('issues.index');
