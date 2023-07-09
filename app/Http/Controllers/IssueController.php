@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Redirect;
 
 class IssueController extends Controller
 {
+    /**
+     * Show all issues.
+     *
+     * @return void
+     */
     public function index()
     {
         // Get user
@@ -26,22 +31,60 @@ class IssueController extends Controller
                 ->load('user', 'department');
         }
 
+        // Get departments
+        $departments = \App\Models\Department::all();
+
         // Return issues
         return Inertia::render('Issues/Index', [
             'issues' => $issues,
+            'departments' => $departments,
         ]);
     }
 
-    public function create()
-    {
-        return Inertia::render('Issues/Create');
-    }
-
+    /**
+     * Create issue.
+     *
+     * @param Request $request The request object
+     * @return void
+     */
     public function store(Request $request)
     {
-        //
+        // Validate request
+        $request->validate(
+            [
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'department_id' => 'required|integer',
+            ],
+            [
+                'title.required' => 'Title is required.',
+                'title.string' => 'Title must be a string.',
+                'title.max' => 'Title must not exceed 255 characters.',
+                'description.required' => 'Description is required.',
+                'description.string' => 'Description must be a string.',
+                'department_id.required' => 'Department is required.',
+                'department_id.integer' => 'Department must be an integer.',
+            ]
+        );
+
+        // Create issue
+        Issue::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'department_id' => $request->department_id,
+            'user_id' => auth()->user()->id,
+        ]);
+
+        // Return issues
+        return Redirect::route('issues.index')->with('success', 'Issue created successfully.');
     }
 
+    /**
+     * Show issue.
+     * 
+     * @param int $id The id of the issue
+     * @return void
+     */
     public function show($id)
     {
         // Get issue
