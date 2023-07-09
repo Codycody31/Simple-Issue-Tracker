@@ -99,7 +99,7 @@ export default {
 
     <div class="row justify-content-end px-3 mb-2">
         <Link
-            class="btn btn-sm btn-primary me-2 close_issue rounded-0 col-auto"
+            class="btn btn-sm btn-primary me-2 close_issue rounded col-auto"
             type="button"
             :href="route('issues.updateStatus', [issue.id, 1])"
             method="patch"
@@ -113,7 +113,7 @@ export default {
             Close Issue
         </Link>
         <Link
-            class="btn btn-sm btn-success me-2 open_issue rounded-0 col-auto"
+            class="btn btn-sm btn-success me-2 open_issue rounded col-auto"
             type="button"
             :href="route('issues.updateStatus', [issue.id, 0])"
             method="patch"
@@ -127,7 +127,7 @@ export default {
             Open Issue
         </Link>
         <Link
-            class="btn btn-sm btn-danger delete_data rounded-0 col-auto"
+            class="btn btn-sm btn-danger delete_data rounded col-auto"
             type="button"
             :href="route('issues.destroy', issue.id)"
             method="delete"
@@ -223,14 +223,14 @@ export default {
                                 "
                             >
                                 <button
-                                    class="btn btn-sm btn-primary edit_comment rounded-0 col-auto me-2"
+                                    class="btn btn-sm btn-primary edit_comment rounded col-auto me-2"
                                     type="button"
                                     :data-id="comment.id"
                                 >
                                     Edit
                                 </button>
                                 <Link
-                                    class="btn btn-sm btn-danger delete_comment rounded-0 col-auto"
+                                    class="btn btn-sm btn-danger delete_comment rounded col-auto"
                                     type="button"
                                     :href="
                                         route('issues.comments.destroy', [
@@ -272,13 +272,13 @@ export default {
                     </div>
                     <div class="form-group row justify-content-end py-2 px-3">
                         <button
-                            class="btn btn-sm rounded-0 btn-primary col-auto me-2"
+                            class="btn btn-sm rounded btn-success col-auto me-2"
                             :disabled="commentForm.processing"
                         >
                             Save
                         </button>
                         <button
-                            class="btn btn-sm rounded-0 btn-secondary col-auto"
+                            class="btn btn-sm rounded btn-secondary col-auto"
                             type="button"
                             @click="resetCommentForm"
                         >
