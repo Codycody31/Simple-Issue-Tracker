@@ -40,8 +40,12 @@ const showingNavigationDropdown = ref(false);
                                 :class="{
                                     active: route().current('dashboard'),
                                 }"
-                                >Dashboard</Link
                             >
+                                <font-awesome-icon
+                                    icon="fas fa-tachometer-alt"
+                                />
+                                Dashboard
+                            </Link>
                         </li>
                         <li
                             class="nav-item"
@@ -55,8 +59,10 @@ const showingNavigationDropdown = ref(false);
                                         'departments.index'
                                     ),
                                 }"
-                                >Department</Link
                             >
+                                <font-awesome-icon icon="fas fa-users-cog" />
+                                Department
+                            </Link>
                         </li>
                         <li
                             class="nav-item"
@@ -66,8 +72,10 @@ const showingNavigationDropdown = ref(false);
                                 class="nav-link <?php echo ($page == 'users') ? 'active' : '' ?>"
                                 aria-current="page"
                                 href="./?page=users"
-                                >Users</a
                             >
+                                <font-awesome-icon icon="fas fa-users" />
+                                Users
+                            </a>
                         </li>
                         <!-- <?php if ($_SESSION['type'] == 1) : ?>
                             <li class="nav-item">
@@ -85,8 +93,12 @@ const showingNavigationDropdown = ref(false);
                                 :class="{
                                     active: route().current('issues.index'),
                                 }"
-                                >Issues</Link
                             >
+                                <font-awesome-icon
+                                    icon="fas fa-exclamation-circle"
+                                />
+                                Issues
+                            </Link>
                         </li>
                         <!--
                         <?php if ($_SESSION['type'] != 1) : ?>

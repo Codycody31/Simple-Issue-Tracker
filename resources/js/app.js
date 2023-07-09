@@ -15,11 +15,15 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /* import specific icons */
 import {
     faSignOutAlt,
-    faUser
+    faUser,
+    faTachometerAlt,
+    faUsersCog,
+    faUsers,
+    faExclamationCircle,
 } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faSignOutAlt, faUser)
+library.add(faSignOutAlt, faUser, faTachometerAlt, faUsersCog, faUsers, faExclamationCircle)
 
 /* Init Ziggy and Inertia */
 import { createApp, h } from 'vue';
