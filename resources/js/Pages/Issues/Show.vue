@@ -228,7 +228,7 @@ export default {
                                 >
                                     Edit
                                 </button>
-                                <a
+                                <Link
                                     class="btn btn-sm btn-danger rounded"
                                     type="button"
                                     :href="
@@ -241,7 +241,7 @@ export default {
                                     as="button"
                                 >
                                     Delete
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </li>
