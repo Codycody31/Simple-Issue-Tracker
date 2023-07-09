@@ -35,7 +35,7 @@ export default {
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
         <div class="col" v-for="issue in issues" :key="issue.id">
             <div
-                class="w-100 bg-dark text-light bg-gradient opcaity-70 py-3 px-2"
+                class="w-100 bg-dark text-light bg-gradient opcaity-70 py-3 px-2 rounded-lg shadow-sm"
             >
                 <h5
                     class="truncate-1 border-bottom border-light"
@@ -74,7 +74,7 @@ export default {
                     >
                     <span class="w-auto badge bg-danger" v-else>Closed</span>
                     <Link
-                        class="btn btn-sm btn-primary col-auto py-0 rounded-0"
+                        class="btn btn-sm btn-primary col-auto py-0 rounded-lg"
                         :href="route('issues.show', issue.id)"
                         >View</Link
                     >

@@ -21,84 +21,80 @@ export default {
 <template>
     <Head title="Departments" />
 
-    <div class="card">
-        <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Department List</h3>
-            <div class="card-tools align-middle">
-                <button
-                    class="btn btn-dark btn-sm py-1 rounded-0"
-                    type="button"
-                    id="create_new"
+    <div class="container mx-auto py-8 border border-gray-300 rounded-lg">
+        <h3 class="text-3xl font-bold mb-4">Departments List</h3>
+
+        <div class="flex items-center mb-4">
+            <button
+                class="btn btn-dark btn-sm rounded-lg px-4 py-2 mr-4"
+                type="button"
+                id="create_new"
+            >
+                Add New
+            </button>
+        </div>
+
+        <table class="w-full table-auto">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">#</th>
+                    <th class="px-4 py-2">Name</th>
+                    <th class="px-4 py-2">Description</th>
+                    <th class="px-4 py-2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    v-for="department in departments"
+                    :key="department.id"
+                    :data-id="department.id"
                 >
-                    Add New
-                </button>
-            </div>
-        </div>
-        <div class="card-body">
-            <table class="table table-hover table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th class="text-center p-0">#</th>
-                        <th class="text-center p-0">Name</th>
-                        <th class="text-center p-0">Description</th>
-                        <th class="text-center p-0">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        class="text-center"
-                        v-for="department in departments"
-                        :key="department.id"
-                    >
-                        <td class="text-center p-0">{{ department.id }}</td>
-                        <td class="py-0 px-1">{{ department.name }}</td>
-                        <td class="py-0 px-1">{{ department.description }}</td>
-                        <th class="text-center py-0 px-1">
-                            <div class="btn-group" role="group">
-                                <button
-                                    id="btnGroupDrop1"
-                                    type="button"
-                                    class="btn btn-primary dropdown-toggle btn-sm rounded-0 py-0"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    Action
-                                </button>
-                                <ul
-                                    class="dropdown-menu"
-                                    aria-labelledby="btnGroupDrop1"
-                                >
-                                    <li>
-                                        <a
-                                            class="dropdown-item edit_data"
-                                            :data-id="department.id"
-                                            href="javascript:void(0)"
-                                            >Edit</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a
-                                            class="dropdown-item delete_data"
-                                            :data-id="department.id"
-                                            :data-name="department.name"
-                                            href="javascript:void(0)"
-                                            >Delete</a
-                                        >
-                                    </li>
-                                </ul>
-                            </div>
-                        </th>
-                    </tr>
-                    <tr
-                        class="text-center"
-                        v-if="!departments || !departments.length"
-                    >
-                        <th class="text-center p-0" colspan="4">
-                            No data display.
-                        </th>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                    <td class="px-4 py-2">{{ department.id }}</td>
+                    <td class="px-4 py-2">{{ department.name }}</td>
+                    <td class="px-4 py-2">{{ department.description }}</td>
+                    <th class="px-4 py-2">
+                        <div class="flex items-center">
+                            <button
+                                id="btnGroupDrop1"
+                                type="button"
+                                class="btn btn-primary dropdown-toggle btn-sm rounded-lg px-3 py-1"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                Action
+                            </button>
+                            <ul
+                                class="dropdown-menu"
+                                aria-labelledby="btnGroupDrop1"
+                            >
+                                <li>
+                                    <a
+                                        class="dropdown-item edit_data"
+                                        :data-id="department.id"
+                                        href="javascript:void(0)"
+                                        >Edit</a
+                                    >
+                                </li>
+                                <li>
+                                    <a
+                                        class="dropdown-item delete_data"
+                                        :data-id="department.id"
+                                        :data-name="department.name"
+                                        href="javascript:void(0)"
+                                        >Delete</a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
+                <tr
+                    class="text-center"
+                    v-if="!departments || !departments.length"
+                >
+                    <th class="px-4 py-2" colspan="4">No data display.</th>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
