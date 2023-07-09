@@ -20,10 +20,11 @@ import {
     faUsersCog,
     faUsers,
     faExclamationCircle,
+    faTicketAlt,
 } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faSignOutAlt, faUser, faTachometerAlt, faUsersCog, faUsers, faExclamationCircle)
+library.add(faSignOutAlt, faUser, faTachometerAlt, faUsersCog, faUsers, faExclamationCircle, faTicketAlt)
 
 /* Init Ziggy and Inertia */
 import { createApp, h } from 'vue';

@@ -79,15 +79,6 @@ const showingNavigationDropdown = ref(false);
                                 Users
                             </Link>
                         </li>
-                        <!-- <?php if ($_SESSION['type'] == 1) : ?>
-                            <li class="nav-item">
-                                <a class="nav-link <?php echo ($page == 'department') ? 'active' : '' ?>" aria-current="page" href="./?page=department">Department</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link <?php echo ($page == 'users') ? 'active' : '' ?>" aria-current="page" href="./?page=users">Users</a>
-                            </li>
-                        <?php endif; ?>
-                        -->
                         <li class="nav-item">
                             <Link
                                 class="nav-link"
@@ -102,12 +93,18 @@ const showingNavigationDropdown = ref(false);
                                 Issues
                             </Link>
                         </li>
-                        <!--
-                        <?php if ($_SESSION['type'] != 1) : ?>
-                            <li class="nav-item">
-                                <a class="nav-link" href="./?page=tickets">Tickets</a>
-                            </li>
-                        <?php endif; ?> -->
+                        <li class="nav-item">
+                            <Link
+                                class="nav-link"
+                                :href="route('tickets.index')"
+                                :class="{
+                                    active: route().current('tickets.index'),
+                                }"
+                            >
+                                <font-awesome-icon icon="fas fa-ticket-alt" />
+                                Tickets
+                            </Link>
+                        </li>
                     </ul>
                 </div>
                 <div>

@@ -9,6 +9,7 @@ use App\Http\Controllers\IssueCommentsController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Departments
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
+
+    // Tickets
+    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
 
     // Users
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
