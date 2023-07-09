@@ -12,6 +12,7 @@ export default {
         InputError,
         Link,
     },
+    layout: GuestLayout,
 
     props: {
         canResetPassword: Boolean,
@@ -40,90 +41,88 @@ export default {
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Log in" />
+    <Head title="Log in" />
 
-        <div class="login-page">
-            <div class="login-form">
-                <h3 class="login-header">Issue Tracker System</h3>
-                <div class="alert alert-success" v-if="status">
-                    {{ status }}
-                </div>
-                <div class="text-center">
-                    <img
-                        src="@/assets/imgs/Simple-Issue-Tracker.png"
-                        alt="Issue Tracker"
-                        width="100"
-                        height="100"
-                        class="d-inline-block align-top"
+    <div class="login-page">
+        <div class="login-form">
+            <h3 class="login-header">Issue Tracker System</h3>
+            <div class="alert alert-success" v-if="status">
+                {{ status }}
+            </div>
+            <div class="text-center">
+                <img
+                    src="@/assets/imgs/Simple-Issue-Tracker.png"
+                    alt="Issue Tracker"
+                    width="100"
+                    height="100"
+                    class="d-inline-block align-top"
+                />
+            </div>
+            <form @submit.prevent="submit" id="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                        id="email"
+                        type="email"
+                        class="form-control"
+                        v-model="form.email"
+                        required
+                        autofocus
+                        autocomplete="username"
+                    />
+                    <InputError
+                        class="error-message"
+                        :message="form.errors.email"
                     />
                 </div>
-                <form @submit.prevent="submit" id="login-form">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input
-                            id="email"
-                            type="email"
-                            class="form-control"
-                            v-model="form.email"
-                            required
-                            autofocus
-                            autocomplete="username"
-                        />
-                        <InputError
-                            class="error-message"
-                            :message="form.errors.email"
-                        />
-                    </div>
 
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            class="form-control"
-                            required
-                            v-model="form.password"
-                            autocomplete="current-password"
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        required
+                        v-model="form.password"
+                        autocomplete="current-password"
+                    />
+                    <InputError
+                        class="error-message"
+                        :message="form.errors.password"
+                    />
+                </div>
+
+                <div class="remember-me">
+                    <label class="checkbox-label">
+                        <Checkbox
+                            name="remember"
+                            v-model:checked="form.remember"
                         />
-                        <InputError
-                            class="error-message"
-                            :message="form.errors.password"
-                        />
-                    </div>
+                        <span class="ml-2">Remember me</span>
+                    </label>
+                </div>
 
-                    <div class="remember-me">
-                        <label class="checkbox-label">
-                            <Checkbox
-                                name="remember"
-                                v-model:checked="form.remember"
-                            />
-                            <span class="ml-2">Remember me</span>
-                        </label>
-                    </div>
-
-                    <div class="forgot-password">
-                        <Link
-                            v-if="canResetPassword"
-                            :href="route('password.request')"
-                            class="forgot-password-link"
-                        >
-                            Forgot your password?
-                        </Link>
-                    </div>
-
-                    <button
-                        class="login-button"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
+                <div class="forgot-password">
+                    <Link
+                        v-if="canResetPassword"
+                        :href="route('password.request')"
+                        class="forgot-password-link"
                     >
-                        Login
-                    </button>
-                </form>
-            </div>
+                        Forgot your password?
+                    </Link>
+                </div>
+
+                <button
+                    class="login-button"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                >
+                    Login
+                </button>
+            </form>
         </div>
-    </GuestLayout>
+    </div>
 </template>
 
 <style scoped>
