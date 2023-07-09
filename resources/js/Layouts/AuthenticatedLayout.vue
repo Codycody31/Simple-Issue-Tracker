@@ -68,14 +68,16 @@ const showingNavigationDropdown = ref(false);
                             class="nav-item"
                             v-if="$page.props.auth.user.type == 1"
                         >
-                            <a
-                                class="nav-link <?php echo ($page == 'users') ? 'active' : '' ?>"
-                                aria-current="page"
-                                href="./?page=users"
+                            <Link
+                                class="nav-link"
+                                :href="route('users.index')"
+                                :class="{
+                                    active: route().current('users.index'),
+                                }"
                             >
                                 <font-awesome-icon icon="fas fa-users" />
                                 Users
-                            </a>
+                            </Link>
                         </li>
                         <!-- <?php if ($_SESSION['type'] == 1) : ?>
                             <li class="nav-item">

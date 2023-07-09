@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\IssueCommentsController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,9 @@ Route::middleware(['auth'])->group(function () {
     // Departments
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
 
+    // Users
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    
     // Issues
     Route::get('/issues', [IssueController::class, 'index'])->name('issues.index');
     Route::get('/issues/create', [IssueController::class, 'create'])->name('issues.create');
