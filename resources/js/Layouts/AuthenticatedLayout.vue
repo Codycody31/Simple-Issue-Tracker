@@ -31,7 +31,7 @@ const showingNavigationDropdown = ref(false);
                 >
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse" id="navbarNav">
+                <div class="navbar-collapse collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <Link
@@ -212,3 +212,10 @@ const showingNavigationDropdown = ref(false);
         </div>
     </div>
 </template>
+
+<style scoped>
+.collapse {
+    /* Disable visibility being set by Tailwind */
+    visibility: unset !important;
+}
+</style>
