@@ -97,6 +97,7 @@ export default {
 <template>
     <Head :title="'Issue: ' + issue.title" />
 
+    <!-- Issue actions -->
     <div class="row justify-content-end px-3 mb-2">
         <Link
             class="btn btn-sm btn-primary me-2 close_issue rounded col-auto"
@@ -140,58 +141,56 @@ export default {
             Delete Issue
         </Link>
     </div>
+
+    <!-- Issue -->
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-body pb-4">
-                    <h4>
-                        <b>Issue: {{ issue.title }}</b>
-                    </h4>
+                <div class="card-body">
+                    <h4 class="mb-4">Issue: {{ issue.title }}</h4>
                     <div class="row">
                         <div class="col-sm-6">
-                            <span
-                                ><small
-                                    >Posted by:
-                                    <b>{{ issue.user.fullname }}</b></small
-                                ></span
-                            ><br />
-                            <span
-                                ><small
-                                    >Posted for:
-                                    <b>{{ issue.department.name }}</b></small
-                                ></span
-                            >
+                            <p>
+                                <small class="text-muted">Posted by:</small
+                                ><br />
+                                <b>{{ issue.user.fullname }}</b>
+                            </p>
+                            <p>
+                                <small class="text-muted">Posted for:</small
+                                ><br />
+                                <b>{{ issue.department.name }}</b>
+                            </p>
                         </div>
                         <div class="col-sm-6">
-                            <span
-                                ><small
-                                    >Status:&nbsp;
-                                    <span
-                                        class="badge bg-success"
-                                        v-if="issue.status == 0"
-                                        >Open</span
-                                    >
-                                    <span class="badge bg-danger" v-else
-                                        >Closed</span
-                                    >
-                                </small></span
-                            ><br />
-                            <span>
-                                <small
-                                    >Date Posted:
-                                    {{ formatDate(issue.created_at) }}
-                                </small></span
-                            >
+                            <p>
+                                <small class="text-muted">Status:</small><br />
+                                <span
+                                    class="badge bg-success"
+                                    v-if="issue.status == 0"
+                                >
+                                    Open
+                                </span>
+                                <span class="badge bg-danger" v-else>
+                                    Closed
+                                </span>
+                            </p>
+                            <p>
+                                <small class="text-muted">Date Posted:</small
+                                ><br />
+                                {{ formatDate(issue.created_at) }}
+                            </p>
                         </div>
                     </div>
-
-                    <hr class="border-light" />
+                    <hr class="my-4" />
                     <div v-html="nl2br(issue.description)"></div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Comments -->
     <div class="py-3">
+        <!-- Comments -->
         <div class="row mb-2">
             <div class="col-md-8">
                 <h5><b>Comments:</b></h5>
@@ -256,6 +255,7 @@ export default {
             </div>
         </div>
 
+        <!-- Comment form -->
         <div class="row">
             <div class="col-md-8">
                 <form id="comment-form" @submit.prevent="handleCommentSubmit">
