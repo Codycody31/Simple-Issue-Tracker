@@ -14,8 +14,13 @@ export default {
 <template>
     <Head title="Dashboard" />
 
-    <div class="">
-        <h3>Welcome to the Issue Tracker System</h3>
-        <hr />
+    <div class="container">
+        <!-- Welcome -->
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="mb-4">Welcome to the Issue Tracker System</h2>
+                <hr />
+            </div>
+        </div>
     </div>
 </template>
