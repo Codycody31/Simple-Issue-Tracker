@@ -51,7 +51,9 @@ const showingNavigationDropdown = ref(false);
                                 class="nav-link"
                                 :href="route('departments.index')"
                                 :class="{
-                                    active: route().current('departments.index'),
+                                    active: route().current(
+                                        'departments.index'
+                                    ),
                                 }"
                                 >Department</Link
                             >
@@ -113,8 +115,10 @@ const showingNavigationDropdown = ref(false);
                                 <Link
                                     class="dropdown-item"
                                     :href="route('profile.edit')"
-                                    >Manage Account</Link
                                 >
+                                    <font-awesome-icon icon="fas fa-user" />
+                                    Manage Account
+                                </Link>
                             </li>
                             <li>
                                 <Link
@@ -122,8 +126,12 @@ const showingNavigationDropdown = ref(false);
                                     :href="route('logout')"
                                     method="post"
                                     as="button"
-                                    >Logout</Link
                                 >
+                                    <font-awesome-icon
+                                        icon="fas fa-sign-out-alt"
+                                    />
+                                    Logout
+                                </Link>
                             </li>
                         </ul>
                     </div>
