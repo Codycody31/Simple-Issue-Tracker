@@ -194,15 +194,15 @@ export default {
     <div class="py-3">
         <div class="row mb-2">
             <div class="col-md-8">
-                <h5><b>Comment/s:</b></h5>
+                <h5><b>Comments:</b></h5>
                 <hr />
                 <ul class="list-group">
                     <li
-                        class="list-group-item p-1 mb-3 border-1 comment-item"
+                        class="list-group-item p-3 mb-3 border comment-item"
                         v-for="comment in issue.comments"
                         :key="comment.id"
                     >
-                        <div class="w-100 border-bottom border-dark">
+                        <div class="border-bottom border-dark">
                             <p class="m-0">
                                 <b>{{ comment.user.fullname }}</b>
                             </p>
@@ -210,7 +210,7 @@ export default {
                                 {{ formatDate(comment.created_at) }}
                             </small>
                         </div>
-                        <div class="w-100 pl-4 py-3 comment-field">
+                        <div class="pl-4 py-3 comment-field">
                             <p class="m-0">{{ comment.comment }}</p>
                         </div>
                         <div class="row justify-content-end px-3">
@@ -223,14 +223,14 @@ export default {
                                 "
                             >
                                 <button
-                                    class="btn btn-sm btn-primary edit_comment rounded col-auto me-2"
+                                    class="btn btn-sm btn-primary rounded me-2"
                                     type="button"
                                     :data-id="comment.id"
                                 >
                                     Edit
                                 </button>
-                                <Link
-                                    class="btn btn-sm btn-danger delete_comment rounded col-auto"
+                                <a
+                                    class="btn btn-sm btn-danger rounded"
                                     type="button"
                                     :href="
                                         route('issues.comments.destroy', [
@@ -242,19 +242,20 @@ export default {
                                     as="button"
                                 >
                                     Delete
-                                </Link>
+                                </a>
                             </div>
                         </div>
                     </li>
                     <li
                         class="text-center list-group-item"
-                        v-if="!issue.comments || issue.comments.length == 0"
+                        v-if="!issue.comments || issue.comments.length === 0"
                     >
-                        No comment listed yet.
+                        No comments listed yet.
                     </li>
                 </ul>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-8">
                 <form id="comment-form" @submit.prevent="handleCommentSubmit">
