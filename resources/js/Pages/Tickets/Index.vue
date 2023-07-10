@@ -57,11 +57,14 @@ export default {
 <template>
     <Head title="Tickets" />
 
+    <!-- Page title -->
     <div class="w-100">
         <h3>Issue Ticket List</h3>
         <small>Below are the list of issues posted into your department</small>
     </div>
     <hr />
+
+    <!-- Issue list -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
         <div
             class="col"
@@ -70,7 +73,7 @@ export default {
             :data-id="ticket.id"
         >
             <div
-                class="w-100 bg-dark text-light bg-gradient opcaity-70 py-3 px-2"
+                class="w-100 bg-dark text-light bg-gradient opcaity-70 py-3 px-2 rounded-lg shadow-sm"
             >
                 <h5
                     class="truncate-1 border-bottom border-light"
@@ -109,6 +112,8 @@ export default {
             </div>
         </div>
     </div>
+
+    <!-- No issue listed -->
     <div class="w-100 text-center" v-if="!tickets || tickets.length == 0">
         <div class="alert alert-warning">No issue listed yet.</div>
     </div>
