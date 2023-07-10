@@ -2,8 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import Modal from "@/Components/Modal.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
-import { nextTick, ref } from "vue";
+import { Head, Link } from "@inertiajs/vue3";
 
 export default {
     components: {
@@ -68,7 +67,7 @@ export default {
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
         <div
             class="col"
-            v-for="ticket in tickets"
+            v-for="ticket in sortIssuesByDate(tickets)"
             :key="ticket.id"
             :data-id="ticket.id"
         >
