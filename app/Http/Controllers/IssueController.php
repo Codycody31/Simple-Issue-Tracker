@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Issue;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 
 class IssueController extends Controller
 {
@@ -99,6 +100,12 @@ class IssueController extends Controller
         foreach ($issue->comments as $comment) {
             $comment->load('user');
         }
+
+        // Convert issue description markdown to html
+        $description = Str::markdown($issue->description);
+
+        // Place description in issue
+        $issue->description = $description;
 
         // Return issue
         return Inertia::render('Issues/Show', [

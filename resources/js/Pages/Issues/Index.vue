@@ -4,6 +4,8 @@ import InputError from "@/Components/InputError.vue";
 import Modal from "@/Components/Modal.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { nextTick, ref } from "vue";
+import { MdEditor } from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
 
 export default {
     components: {
@@ -12,6 +14,7 @@ export default {
         Link,
         Modal,
         InputError,
+        MdEditor,
     },
     layout: AuthenticatedLayout,
     props: {
@@ -84,6 +87,9 @@ export default {
             createIssue,
             closeModal,
             handleIssueSubmit,
+            issueTitleInput,
+            issueDescriptionInput,
+            issueDepartmentInput,
         };
     },
     methods: {
@@ -124,6 +130,7 @@ export default {
 <template>
     <Head title="Issues" />
 
+    <!-- Issue list header -->
     <div class="w-100 d-flex justify-content-between">
         <h3>Issue List</h3>
         <button
@@ -135,6 +142,8 @@ export default {
         </button>
     </div>
     <hr />
+
+    <!-- Issue list -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
         <div
             class="col"
@@ -195,9 +204,13 @@ export default {
             </div>
         </div>
     </div>
+
+    <!-- No issue listed -->
     <div class="w-100 text-center" v-if="issues.length == 0">
         <div class="alert alert-warning">No issue listed yet.</div>
     </div>
+
+    <!-- Create issue modal -->
     <Modal :show="creatingIssue" @close="closeModal">
         <div class="p-6">
             <h2 class="text-2xl font-bold text-gray-900">Create New Issue</h2>
@@ -262,14 +275,14 @@ export default {
                         class="block text-sm font-medium text-gray-700"
                         >Description</label
                     >
-                    <textarea
+                    <MdEditor
                         id="description"
                         v-model="issueForm.description"
                         ref="issueDescriptionInput"
-                        rows="4"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        language="en-US"
                         placeholder="Enter description here"
-                    ></textarea>
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
                     <InputError
                         :message="issueForm.errors.description"
                         class="mt-2"

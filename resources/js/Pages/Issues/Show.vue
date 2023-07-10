@@ -182,7 +182,10 @@ export default {
                         </div>
                     </div>
                     <hr class="my-4" />
-                    <div v-html="nl2br(issue.description)"></div>
+                    <div
+                        class="md-html"
+                        v-html="nl2br(issue.description)"
+                    ></div>
                 </div>
             </div>
         </div>
