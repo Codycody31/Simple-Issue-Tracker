@@ -26,6 +26,9 @@ import {
 /* add icons to the library */
 library.add(faSignOutAlt, faUser, faTachometerAlt, faUsersCog, faUsers, faExclamationCircle, faTicketAlt)
 
+/* import laravel-permission-to-vuejs */
+import LaravelPermissionToVueJS from 'laravel-permission-to-vuejs'
+
 /* Init Ziggy and Inertia */
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
@@ -41,6 +44,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue, Ziggy)
+            .use(LaravelPermissionToVueJS)
             .component('font-awesome-icon', FontAwesomeIcon)
             .mount(el);
     },

@@ -24,6 +24,14 @@
     <meta name="msapplication-config" content="/assets/img/icons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 
+    <!-- Laravel Permissions -->
+    <script type="text/javascript">
+        window.Laravel = {
+            jsPermissions: {!! auth()->user()
+                ?->jsPermissions() !!}
+        }
+    </script>
+
     <!-- Scripts -->
     @routes
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
