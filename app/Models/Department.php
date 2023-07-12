@@ -33,4 +33,20 @@ class Department extends Model
      * @var array<string, string>
      */
     protected $casts = [];
+
+    /**
+     * Get the employees for the department.
+     */
+    public function employees()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    /**
+     * Get the issues for the department.
+     */
+    public function issues()
+    {
+        return $this->hasMany(Issue::class);
+    }
 }
