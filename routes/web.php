@@ -34,7 +34,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Departments
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
-
+    Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
+    
     // Tickets
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
 
