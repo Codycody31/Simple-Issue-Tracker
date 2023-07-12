@@ -20,18 +20,27 @@ export default {
             required: true,
         },
     },
-    setup(props) {
-        // Show/hide department modal.
+    setup() {
+        // Modals.
         const showDepartmentModal = ref(false);
+        const showDeleteModal = ref(false);
 
         // Inputs.
         const departmentName = ref(null);
         const departmentDescription = ref(null);
+        const departmentToDelete = ref(null);
 
         // Department form.
         const departmentForm = useForm({
             name: "",
             description: "",
+        });
+
+        // Delete department form.
+        const deleteDepartmentForm = useForm({
+            _method: "DELETE",
+            id: "",
+            name: "",
         });
 
         // Create department.
@@ -42,6 +51,16 @@ export default {
             nextTick(() => {
                 departmentName.value.focus();
             });
+        };
+
+        // Delete department.
+        const deleteDepartment = (department) => {
+            // Show delete confirmation modal.
+            showDeleteModal.value = true;
+
+            // Set the department ID to be deleted.
+            deleteDepartmentForm.id = department.id;
+            deleteDepartmentForm.name = department.name;
         };
 
         // Create department.
@@ -74,18 +93,50 @@ export default {
         // Close modal.
         const closeModal = () => {
             showDepartmentModal.value = false;
+            showDeleteModal.value = false;
 
             departmentForm.reset();
+            deleteDepartmentForm.reset();
         };
 
+        // Confirm delete.
+        const confirmDelete = () => {
+            // Make an API call to delete the department
+            deleteDepartmentForm.delete(route("departments.destroy"), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Close the delete confirmation modal
+                    closeModal();
+
+                    // Log
+                    console.log("Department deleted successfully!");
+                },
+                onError: () => {
+                    // Log
+                    console.log("Error deleting department!");
+                },
+                onFinish: () => {
+                    // Log
+                    console.log("Finished submitting form.");
+                },
+            });
+        };
+
+        // Return.
         return {
             showDepartmentModal,
             departmentName,
             departmentDescription,
             departmentForm,
+            deleteDepartmentForm,
             createDepartment,
             handleDepartmentSubmit,
             closeModal,
+            showDeleteModal,
+            departmentToDelete,
+            deleteDepartment,
+            showDeleteModal,
+            confirmDelete,
         };
     },
 };
@@ -153,10 +204,12 @@ export default {
                                     </li>
                                     <li>
                                         <a
-                                            class="dropdown-item delete_data"
+                                            class="dropdown-item delete_data text-danger cursor-pointer"
                                             :data-id="department.id"
                                             :data-name="department.name"
-                                            href="javascript:void(0)"
+                                            @click="
+                                                deleteDepartment(department)
+                                            "
                                             >Delete</a
                                         >
                                     </li>
@@ -257,6 +310,102 @@ export default {
                                 Processing...
                             </span>
                             <span v-else>Create</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </Modal>
+
+        <!-- Delete Department Modal -->
+        <Modal :show="showDeleteModal" @close="closeModal">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-gray-900">
+                    Delete Department
+                </h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    Are you sure you want to delete this department?
+                </p>
+                <!-- Department Errors -->
+                <InputError
+                    :message="deleteDepartmentForm.errors.department"
+                    class="mt-2"
+                />
+                <hr class="mt-4" />
+                <form @submit.prevent="confirmDelete">
+                    <!-- Name -->
+                    <div class="mt-4">
+                        <label
+                            for="name"
+                            class="block text-sm font-medium text-gray-700"
+                            >Name</label
+                        >
+                        <input
+                            id="name"
+                            v-model="deleteDepartmentForm.name"
+                            ref="departmentName"
+                            type="text"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+                            placeholder="Enter name here"
+                            readonly
+                        />
+                        <InputError
+                            :message="deleteDepartmentForm.errors.name"
+                            class="mt-2"
+                        />
+                    </div>
+
+                    <!-- Id -->
+                    <div class="mt-4">
+                        <label
+                            for="id"
+                            class="block text-sm font-medium text-gray-700"
+                            >Id</label
+                        >
+                        <input
+                            id="id"
+                            v-model="deleteDepartmentForm.id"
+                            ref="departmentId"
+                            type="text"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+                            placeholder="Enter id here"
+                            readonly
+                        />
+                        <InputError
+                            :message="deleteDepartmentForm.errors.id"
+                            class="mt-2"
+                        />
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="mt-6 text-center flex justify-between">
+                        <button
+                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-gray-600 hover:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring-gray-500 disabled:opacity-50"
+                            @click="closeModal"
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-red-600 hover:bg-red-700 focus:outline-none focus:border-red-700 focus:ring-red-500 disabled:opacity-50"
+                            :disabled="deleteDepartmentForm.processing"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="mr-2"
+                                width="32"
+                                height="32"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M7 21q-.825 0-1.413-.588T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.588 1.413T17 21H7Zm2-4h2V8H9v9Zm4 0h2V8h-2v9Z"
+                                />
+                            </svg>
+
+                            <span v-if="deleteDepartmentForm.processing">
+                                Processing...
+                            </span>
+                            <span v-else>Delete </span>
                         </button>
                     </div>
                 </form>

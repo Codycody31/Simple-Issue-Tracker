@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     // Departments
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
     Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
+    Route::delete('/departments', [DepartmentController::class, 'delete'])->name('departments.destroy');
     
     // Tickets
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
