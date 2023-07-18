@@ -1,18 +1,114 @@
 <script>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, useForm } from "@inertiajs/vue3";
+import { nextTick, ref } from "vue";
+import Modal from "@/Components/Modal.vue";
 
 export default {
     components: {
         AuthenticatedLayout,
         Head,
         Link,
+        Modal,
     },
     layout: AuthenticatedLayout,
     props: {
         users: {
             type: Array,
             required: true,
+        },
+        departments: {
+            type: Array,
+            required: true,
+        },
+    },
+    setup(props) {
+        // Show/hide issue modal
+        const creatingUser = ref(false);
+
+        // Inputs
+        const userFullNameInput = ref(null);
+        const userEmailInput = ref(null);
+        const userContactInput = ref(null);
+        const userUsernameInput = ref(null);
+        const userDepartmentInput = ref(null);
+        const userDesignationInput = ref(null);
+        const userTypeInput = ref(null);
+
+        // User form
+        const userForm = useForm({
+            fullname: "",
+            email: "",
+            contact: "",
+            username: "",
+            department: "",
+            designation: "",
+            type: 2,
+        });
+
+        // Create new user
+        const createUser = () => {
+            creatingUser.value = true;
+
+            nextTick(() => {
+                userFullNameInput.value.focus();
+            });
+        };
+
+        // Handle Submit
+        const handleSubmit = () => {
+            userForm.post(route("users.store"), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Close modal
+                    closeModal();
+
+                    // Reset form
+                    userForm.reset();
+
+                    // Show success messag
+                },
+            });
+        };
+
+        // Close modal
+        const closeModal = () => {
+            creatingUser.value = false;
+
+            userForm.reset();
+        };
+
+        return {
+            creatingUser,
+            userFullNameInput,
+            userEmailInput,
+            userContactInput,
+            userUsernameInput,
+            userDepartmentInput,
+            userDesignationInput,
+            userTypeInput,
+            userForm,
+            createUser,
+            handleSubmit,
+            closeModal,
+        };
+    },
+    methods: {
+        /**
+         * Format date to locale string
+         * @param {*} date Date to be formatted
+         * @returns Formatted date
+         */
+        formatDate(date) {
+            if (!date) {
+                return "";
+            }
+            try {
+                return new Date(date).toLocaleString();
+            } catch (error) {
+                console.error(error);
+                return "";
+            }
         },
     },
 };
@@ -22,17 +118,21 @@ export default {
     <Head title="Users" />
 
     <div class="container mx-auto py-8 border border-gray-300 rounded-lg">
+        <!-- Header -->
         <h3 class="text-3xl font-bold mb-4">Users List</h3>
 
+        <!-- Create new -->
         <div class="flex items-center mb-4">
             <button
                 class="btn btn-dark btn-sm rounded-lg px-4 py-2 mr-4"
                 type="button"
-                id="create_new"
+                @click="createUser"
             >
                 Add New
             </button>
         </div>
+
+        <!-- Table -->
         <div class="table-responsive">
             <table class="w-full table-auto">
                 <thead>
@@ -98,5 +198,250 @@ export default {
                 </tbody>
             </table>
         </div>
+
+        <!-- Create user modal -->
+        <Modal :show="creatingUser" @close="closeModal">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-gray-900">
+                    Create New User
+                </h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    Please fill in the form below. All fields are required.
+                </p>
+                <hr class="mt-4" />
+                <form @submit.prevent="handleSubmit">
+                    <!-- Full Name -->
+                    <div class="mt-4">
+                        <label
+                            for="fullname"
+                            class="block text-sm font-medium text-gray-700"
+                        >
+                            Full Name
+                        </label>
+                        <div class="mt-1">
+                            <input
+                                type="text"
+                                name="fullname"
+                                id="fullname"
+                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                v-model="userForm.fullname"
+                                ref="userFullNameInput"
+                                placeholder="Enter full name"
+                            />
+                        </div>
+                        <p
+                            class="mt-2 text-sm text-red-600"
+                            v-if="userForm.errors.fullname"
+                        >
+                            {{ userForm.errors.fullname }}
+                        </p>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mt-4">
+                        <label
+                            for="email"
+                            class="block text-sm font-medium text-gray-700"
+                        >
+                            Email
+                        </label>
+                        <div class="mt-1">
+                            <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                v-model="userForm.email"
+                                ref="userEmailInput"
+                                placeholder="Enter email address"
+                            />
+                        </div>
+                        <p
+                            class="mt-2 text-sm text-red-600"
+                            v-if="userForm.errors.email"
+                        >
+                            {{ userForm.errors.email }}
+                        </p>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="mt-4">
+                        <label
+                            for="contact"
+                            class="block text-sm font-medium text-gray-700"
+                        >
+                            Contact
+                        </label>
+                        <div class="mt-1">
+                            <input
+                                type="text"
+                                name="contact"
+                                id="contact"
+                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                v-model="userForm.contact"
+                                ref="userContactInput"
+                                placeholder="Enter contact number"
+                            />
+                        </div>
+                        <p
+                            class="mt-2 text-sm text-red-600"
+                            v-if="userForm.errors.contact"
+                        >
+                            {{ userForm.errors.contact }}
+                        </p>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="mt-4">
+                        <label
+                            for="username"
+                            class="block text-sm font-medium text-gray-700"
+                        >
+                            Username
+                        </label>
+                        <div class="mt-1">
+                            <input
+                                type="text"
+                                name="username"
+                                id="username"
+                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                v-model="userForm.username"
+                                ref="userUsernameInput"
+                                placeholder="Enter username"
+                            />
+                        </div>
+                        <p
+                            class="mt-2 text-sm text-red-600"
+                            v-if="userForm.errors.username"
+                        >
+                            {{ userForm.errors.username }}
+                        </p>
+                    </div>
+
+                    <!-- Department -->
+                    <div class="mt-4">
+                        <label
+                            for="department"
+                            class="block text-sm font-medium text-gray-700"
+                        >
+                            Department
+                        </label>
+                        <div class="mt-1">
+                            <select
+                                id="department"
+                                v-model="userForm.department"
+                                ref="issueDepartmentInput"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            >
+                                <option value="" disabled>
+                                    Please select here
+                                </option>
+                                <option
+                                    v-for="department in departments"
+                                    :key="department.id"
+                                    :value="department.id"
+                                >
+                                    {{ department.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <p
+                            class="mt-2 text-sm text-red-600"
+                            v-if="userForm.errors.department"
+                        >
+                            {{ userForm.errors.department }}
+                        </p>
+                    </div>
+
+                    <!-- Designation -->
+                    <div class="mt-4">
+                        <label
+                            for="designation"
+                            class="block text-sm font-medium text-gray-700"
+                        >
+                            Designation
+                        </label>
+                        <div class="mt-1">
+                            <input
+                                type="text"
+                                name="designation"
+                                id="designation"
+                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                v-model="userForm.designation"
+                                ref="userDesignationInput"
+                                placeholder="Enter designation"
+                            />
+                        </div>
+                        <p
+                            class="mt-2 text-sm text-red-600"
+                            v-if="userForm.errors.designation"
+                        >
+                            {{ userForm.errors.designation }}
+                        </p>
+                    </div>
+
+                    <!-- Type -->
+                    <div class="mt-4">
+                        <label
+                            for="type"
+                            class="block text-sm font-medium text-gray-700"
+                        >
+                            Type
+                        </label>
+                        <div class="mt-1">
+                            <select
+                                name="type"
+                                id="type"
+                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                v-model="userForm.type"
+                                ref="userTypeInput"
+                            >
+                                <option value="" disabled>
+                                    Please select here
+                                </option>
+                                <option value="1">Administrator</option>
+                                <option value="2">Employee</option>
+                            </select>
+                        </div>
+                        <p
+                            class="mt-2 text-sm text-red-600"
+                            v-if="userForm.errors.type"
+                        >
+                            {{ userForm.errors.type }}
+                        </p>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="mt-6 text-center flex justify-between">
+                        <button
+                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-gray-600 hover:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring-gray-500 disabled:opacity-50"
+                            @click="closeModal"
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:border-indigo-700 focus:ring-indigo-500 disabled:opacity-50"
+                            :disabled="userForm.processing"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="mr-2"
+                                width="32"
+                                height="32"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M18 14v-3h-3V9h3V6h2v3h3v2h-3v3h-2Zm-9-2q-1.65 0-2.825-1.175T5 8q0-1.65 1.175-2.825T9 4q1.65 0 2.825 1.175T13 8q0 1.65-1.175 2.825T9 12Zm-8 8v-2.8q0-.85.438-1.563T2.6 14.55q1.55-.775 3.15-1.163T9 13q1.65 0 3.25.388t3.15 1.162q.725.375 1.163 1.088T17 17.2V20H1Z"
+                                />
+                            </svg>
+
+                            Create User
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </Modal>
     </div>
 </template>

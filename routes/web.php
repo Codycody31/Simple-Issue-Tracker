@@ -42,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Users
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
     
     // Issues
     Route::get('/issues', [IssueController::class, 'index'])->name('issues.index');
