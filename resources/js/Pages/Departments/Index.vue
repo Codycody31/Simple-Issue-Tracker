@@ -71,24 +71,14 @@ export default {
             departmentForm.post(route("departments.store"), {
                 preserveScroll: true,
                 onSuccess: () => {
-                    // Close modal
                     closeModal();
-
-                    // Reset form.
                     departmentForm.reset();
-
-                    // Log
                     console.log("Department created successfully!");
                 },
                 onError: () => {
-                    // Log
                     console.log(
                         "Error submitting form! Please check your inputs."
                     );
-                },
-                onFinish: () => {
-                    // Log
-                    console.log("Finished submitting form.");
                 },
             });
         };
@@ -96,24 +86,13 @@ export default {
             departmentForm.patch(route("departments.update"), {
                 preserveScroll: true,
                 onSuccess: () => {
-                    // Close modal
                     closeModal();
-
-                    // Reset form.
                     departmentForm.reset();
-
-                    // Log
-                    console.log("Department updated successfully!");
                 },
                 onError: () => {
-                    // Log
                     console.log(
                         "Error submitting form! Please check your inputs."
                     );
-                },
-                onFinish: () => {
-                    // Log
-                    console.log("Finished submitting form.");
                 },
             });
         };
