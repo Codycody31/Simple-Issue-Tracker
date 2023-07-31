@@ -11,137 +11,77 @@ const showingNavigationDropdown = ref(false);
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient">
             <div class="container">
                 <Link class="navbar-brand" :href="route('dashboard')">
-                    <img
-                        src="@/assets/imgs/Simple-Issue-Tracker.png"
-                        alt="Issue Tracker"
-                        width="30"
-                        height="30"
-                        class="d-inline-block align-top"
-                    />
-                    Issue Tracker
+                <img src="@/assets/imgs/Simple-Issue-Tracker.png" alt="Issue Tracker" width="30" height="30"
+                    class="d-inline-block align-top" />
+                Issue Tracker
                 </Link>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <Link
-                                class="nav-link"
-                                :href="route('dashboard')"
-                                :class="{
-                                    active: route().current('dashboard'),
-                                }"
-                            >
-                                <font-awesome-icon
-                                    icon="fas fa-tachometer-alt"
-                                />
-                                Dashboard
+                            <Link class="nav-link" :href="route('dashboard')" :class="{
+                                active: route().current('dashboard'),
+                            }">
+                            <font-awesome-icon icon="fas fa-tachometer-alt" />
+                            Dashboard
                             </Link>
                         </li>
-                        <li
-                            class="nav-item"
-                            v-if="$page.props.auth.user.type == 1"
-                        >
-                            <Link
-                                class="nav-link"
-                                :href="route('departments.index')"
-                                :class="{
-                                    active: route().current(
-                                        'departments.index'
-                                    ),
-                                }"
-                            >
-                                <font-awesome-icon icon="fas fa-users-cog" />
-                                Department
+                        <li class="nav-item" v-if="$page.props.auth.user.type == 1">
+                            <Link class="nav-link" :href="route('departments.index')" :class="{
+                                active: route().current(
+                                    'departments.index'
+                                ),
+                            }">
+                            <font-awesome-icon icon="fas fa-users-cog" />
+                            Department
                             </Link>
                         </li>
-                        <li
-                            class="nav-item"
-                            v-if="$page.props.auth.user.type == 1"
-                        >
-                            <Link
-                                class="nav-link"
-                                :href="route('users.index')"
-                                :class="{
-                                    active: route().current('users.index'),
-                                }"
-                            >
-                                <font-awesome-icon icon="fas fa-users" />
-                                Users
+                        <li class="nav-item" v-if="$page.props.auth.user.type == 1">
+                            <Link class="nav-link" :href="route('users.index')" :class="{
+                                active: route().current('users.index'),
+                            }">
+                            <font-awesome-icon icon="fas fa-users" />
+                            Users
                             </Link>
                         </li>
                         <li class="nav-item">
-                            <Link
-                                class="nav-link"
-                                :href="route('issues.index')"
-                                :class="{
-                                    active: route().current('issues.index'),
-                                }"
-                            >
-                                <font-awesome-icon
-                                    icon="fas fa-exclamation-circle"
-                                />
-                                Issues
+                            <Link class="nav-link" :href="route('issues.index')" :class="{
+                                active: route().current('issues.index'),
+                            }">
+                            <font-awesome-icon icon="fas fa-exclamation-circle" />
+                            Issues
                             </Link>
                         </li>
                         <li class="nav-item">
-                            <Link
-                                class="nav-link"
-                                :href="route('tickets.index')"
-                                :class="{
-                                    active: route().current('tickets.index'),
-                                }"
-                            >
-                                <font-awesome-icon icon="fas fa-ticket-alt" />
-                                Tickets
+                            <Link class="nav-link" :href="route('tickets.index')" :class="{
+                                active: route().current('tickets.index'),
+                            }">
+                            <font-awesome-icon icon="fas fa-ticket-alt" />
+                            Tickets
                             </Link>
                         </li>
                     </ul>
                 </div>
                 <div>
                     <div class="dropdown">
-                        <button
-                            class="btn btn-secondary dropdown-toggle bg-transparent text-light border-0"
-                            type="button"
-                            id="dropdownMenuButton1"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
+                        <button class="btn btn-secondary dropdown-toggle bg-transparent text-light border-0" type="button"
+                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             Hello {{ $page.props.auth.user.fullname }}
                         </button>
-                        <ul
-                            class="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton1"
-                        >
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li>
-                                <Link
-                                    class="dropdown-item"
-                                    :href="route('profile.edit')"
-                                >
-                                    <font-awesome-icon icon="fas fa-user" />
-                                    Manage Account
+                                <Link class="dropdown-item" :href="route('profile.edit')">
+                                <font-awesome-icon icon="fas fa-user" />
+                                Manage Account
                                 </Link>
                             </li>
                             <li>
-                                <Link
-                                    class="dropdown-item"
-                                    :href="route('logout')"
-                                    method="post"
-                                    as="button"
-                                >
-                                    <font-awesome-icon
-                                        icon="fas fa-sign-out-alt"
-                                    />
-                                    Logout
+                                <Link class="dropdown-item" :href="route('logout')" method="post" as="button">
+                                <font-awesome-icon icon="fas fa-sign-out-alt" />
+                                Logout
                                 </Link>
                             </li>
                         </ul>
@@ -152,38 +92,28 @@ const showingNavigationDropdown = ref(false);
 
         <!-- Content -->
         <div class="container py-5">
+            <div v-if="$page.props.flash.success" class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ $page.props.flash.success }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
             <slot />
         </div>
     </main>
-    <div
-        class="modal fade"
-        id="uni_modal"
-        role="dialog"
-        data-bs-backdrop="static"
-    >
-        <div
-            class="modal-dialog modal-md modal-dialog-centered"
-            role="document"
-        >
+    <div class="modal fade" id="uni_modal" role="dialog" data-bs-backdrop="static">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"></h5>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        id="submit"
-                        onclick="$('#uni_modal form').submit()"
-                    >
+                    <button type="button" class="btn btn-primary" id="submit" onclick="$('#uni_modal form').submit()">
                         Save
                     </button>
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                    >
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Cancel
                     </button>
                 </div>
@@ -191,10 +121,7 @@ const showingNavigationDropdown = ref(false);
         </div>
     </div>
     <div class="modal fade" id="confirm_modal" role="dialog">
-        <div
-            class="modal-dialog modal-md modal-dialog-centered"
-            role="document"
-        >
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
             <div class="modal-content rounded-0">
                 <div class="modal-header py-2">
                     <h5 class="modal-title">Confirmation</h5>
@@ -203,19 +130,10 @@ const showingNavigationDropdown = ref(false);
                     <div id="delete_content"></div>
                 </div>
                 <div class="modal-footer py-1">
-                    <button
-                        type="button"
-                        class="btn btn-primary btn-sm rounded-0"
-                        id="confirm"
-                        onclick=""
-                    >
+                    <button type="button" class="btn btn-primary btn-sm rounded-0" id="confirm" onclick="">
                         Continue
                     </button>
-                    <button
-                        type="button"
-                        class="btn btn-secondary btn-sm rounded-0"
-                        data-bs-dismiss="modal"
-                    >
+                    <button type="button" class="btn btn-secondary btn-sm rounded-0" data-bs-dismiss="modal">
                         Close
                     </button>
                 </div>
