@@ -160,11 +160,6 @@ class UserController extends Controller
         $updUser->type = $request->type;
         $updUser->save();
 
-        // If user is not updated, redirect back with error
-        if (!$updUser->wasChanged()) {
-            return redirect()->back()->withErrors(['user' => 'User could not be updated.']);
-        }
-
         // Redirect to users index page
         return Redirect::route('users.index')->with('success', 'User updated successfully.');
     }
