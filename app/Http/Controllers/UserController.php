@@ -101,6 +101,75 @@ class UserController extends Controller
     }
 
     /**
+     * Update a user
+     * 
+     * @param Request $request The request object
+     * @return void
+     */
+    public function update(Request $request)
+    {
+        // User
+        $user = auth()->user();
+
+        // If user is not an admin, redirect to dashboard
+        if ($user->type != 1) {
+            return Redirect::route('dashboard')->with('error', 'You are not authorized to view that page.');
+        }
+
+        // Validate request
+        $request->validate(
+            [
+                'id' => 'required|integer|exists:users,id',
+                'fullname' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,' . $request->id,
+                'contact' => 'required|string|max:255',
+                'username' => 'required|string|max:255|unique:users,username,' . $request->id,
+                'department' => 'required|integer|exists:departments,id',
+                'designation' => 'required|string|max:255',
+                'type' => 'required|integer',
+            ],
+            [
+                'id.required' => 'Please select a user to update.',
+                'id.integer' => 'User ID must be an integer.',
+                'id.exists' => 'User does not exist.',
+                'fullname.required' => 'Fullname is required',
+                'email.required' => 'Email is required',
+                'contact.required' => 'Contact is required',
+                'username.required' => 'Username is required',
+                'department.required' => 'Department is required',
+                'designation.required' => 'Designation is required',
+                'type.required' => 'Type is required',
+            ]
+        );
+
+        // Get user
+        $updUser = User::find($request->id);
+
+        // If user does not exist, redirect to users index page
+        if (!$updUser) {
+            return redirect()->back()->withErrors(['user' => 'User does not exist.']);
+        }
+
+        // Update user
+        $updUser->fullname = $request->fullname;
+        $updUser->email = $request->email;
+        $updUser->contact = $request->contact;
+        $updUser->username = $request->username;
+        $updUser->department_id = $request->department;
+        $updUser->designation = $request->designation;
+        $updUser->type = $request->type;
+        $updUser->save();
+
+        // If user is not updated, redirect back with error
+        if (!$updUser->wasChanged()) {
+            return redirect()->back()->withErrors(['user' => 'User could not be updated.']);
+        }
+
+        // Redirect to users index page
+        return Redirect::route('users.index')->with('success', 'User updated successfully.');
+    }
+
+    /**
      * Delete a user
      * 
      * @param \Illuminate\Http\Request $request

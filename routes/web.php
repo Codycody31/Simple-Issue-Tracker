@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
     // Users
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::patch('/users', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users', [UserController::class, 'delete'])->name('users.destroy');
     
     // Issues
