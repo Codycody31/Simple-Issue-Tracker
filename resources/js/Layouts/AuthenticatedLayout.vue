@@ -92,13 +92,23 @@ const showingNavigationDropdown = ref(false);
 
         <!-- Content -->
         <div class="container py-5">
+            <!-- Flash Message -->
             <div v-if="$page.props.flash.success" class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ $page.props.flash.success }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="float-right close text-xl" data-dismiss="alert" aria-label="Close"
+                    @click="$page.props.flash.success = ''">
+                    <span aria-hidden="true">✖</span>
+                </button>
+            </div>
+            <div v-if="$page.props.flash.error" class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ $page.props.flash.error }}
+                <button type="button" class="float-right close text-xl" data-dismiss="alert" aria-label="Close">
+                    @click="$page.props.flash.error = ''">
+                    <span aria-hidden="true">✖</span>
                 </button>
             </div>
 
+            <!-- Page Content -->
             <slot />
         </div>
     </main>
