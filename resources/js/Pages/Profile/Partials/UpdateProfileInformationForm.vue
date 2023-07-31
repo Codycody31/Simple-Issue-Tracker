@@ -20,6 +20,7 @@ const form = useForm({
     fullname: user.fullname,
     email: user.email,
     contact: user.contact,
+    username: user.username,
 });
 </script>
 
@@ -54,6 +55,22 @@ const form = useForm({
                 />
 
                 <InputError class="mt-2" :message="form.errors.fullname" />
+            </div>
+
+            <!-- Username -->
+            <div>
+                <InputLabel for="username" value="Username" />
+
+                <TextInput
+                    id="username"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.username"
+                    required
+                    autocomplete="username"
+                />
+
+                <InputError class="mt-2" :message="form.errors.username" />
             </div>
 
             <!-- Email Address -->
