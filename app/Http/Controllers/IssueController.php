@@ -89,12 +89,15 @@ class IssueController extends Controller
     public function show($id)
     {
         // Get issue
-        $issue = Issue::findOrFail($id)->load('user', 'department', 'comments');
+        $issue = Issue::find($id);
 
         // Validate if user is authorized to view issue
         if (!$issue || ($issue->user_id !== auth()->user()->id && $issue->department_id !== auth()->user()->department_id && auth()->user()->type !== 1)) {
             return redirect()->route('issues.index')->with('error', 'This issue does not exist or you are not authorized to view it.');
         }
+
+        // Load issue with user, department and comments
+        $issue->load('user', 'department', 'comments');
 
         // Pull the user for each comment
         foreach ($issue->comments as $comment) {

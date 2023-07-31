@@ -102,7 +102,7 @@ const showingNavigationDropdown = ref(false);
             </div>
             <div v-if="$page.props.flash.error" class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{ $page.props.flash.error }}
-                <button type="button" class="float-right close text-xl" data-dismiss="alert" aria-label="Close">
+                <button type="button" class="float-right close text-xl" data-dismiss="alert" aria-label="Close"
                     @click="$page.props.flash.error = ''">
                     <span aria-hidden="true">✖</span>
                 </button>
