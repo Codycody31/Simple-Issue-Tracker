@@ -1,5 +1,6 @@
 <script>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import InputError from "@/Components/InputError.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import { nextTick, ref } from "vue";
 import Modal from "@/Components/Modal.vue";
@@ -9,6 +10,7 @@ export default {
         AuthenticatedLayout,
         Head,
         Link,
+        InputError,
         Modal,
     },
     layout: AuthenticatedLayout,
@@ -499,19 +501,47 @@ export default {
                 />
                 <hr class="mt-4" />
                 <form @submit.prevent="handleDelete">
-                    <!-- ID -->
-                    <input
-                        type="hidden"
-                        name="id"
-                        v-model="deleteUserForm.id"
-                    />
-
                     <!-- Name -->
-                    <input
-                        type="hidden"
-                        name="name"
-                        v-model="deleteUserForm.name"
-                    />
+                    <div class="mt-4">
+                        <label
+                            for="name"
+                            class="block text-sm font-medium text-gray-700"
+                            >Name</label
+                        >
+                        <input
+                            id="name"
+                            v-model="deleteUserForm.name"
+                            type="text"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+                            placeholder="Enter name here"
+                            readonly
+                        />
+                        <InputError
+                            :message="deleteUserForm.errors.name"
+                            class="mt-2"
+                        />
+                    </div>
+
+                    <!-- Id -->
+                    <div class="mt-4">
+                        <label
+                            for="id"
+                            class="block text-sm font-medium text-gray-700"
+                            >Id</label
+                        >
+                        <input
+                            id="id"
+                            v-model="deleteUserForm.id"
+                            type="text"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+                            placeholder="Enter id here"
+                            readonly
+                        />
+                        <InputError
+                            :message="deleteUserForm.errors.id"
+                            class="mt-2"
+                        />
+                    </div>
 
                     <!-- Submit -->
                     <div class="mt-6 text-center flex justify-between">

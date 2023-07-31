@@ -141,6 +141,11 @@ class UserController extends Controller
             return redirect()->back()->withErrors(['user' => 'User does not exist.']);
         }
 
+        // If user is themselves, redirect to users index page
+        if ($delUser->id === $user->id) {
+            return redirect()->back()->withErrors(['user' => 'You cannot delete yourself.']);
+        }
+
         // Delete user comments and issues
         $delUser->comments()->delete();
         $delUser->issues()->delete();
