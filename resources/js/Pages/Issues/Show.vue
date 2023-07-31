@@ -2,6 +2,8 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
+import { nextTick, ref } from "vue";
+import Modal from "@/Components/Modal.vue";
 
 export default {
     components: {
@@ -9,6 +11,7 @@ export default {
         Head,
         Link,
         InputError,
+        Modal,
     },
     layout: AuthenticatedLayout,
     props: {
@@ -18,9 +21,29 @@ export default {
         },
     },
     setup(props) {
+        // Modals
+        const deletingIssue = ref(null);
+
+        // Inputs
+        const issueToDelete = ref(null);
+
+        // Forms
         const commentForm = useForm({
             comment: "",
         });
+        const deleteIssueForm = useForm({
+            _method: "delete",
+            id: "",
+            title: "",
+        });
+
+        // Actions
+        const deleteIssue = (user) => {
+            issueToDelete.value = user;
+            deleteIssueForm.id = user.id;
+            deleteIssueForm.title = user.title;
+            deletingIssue.value = true;
+        };
 
         const handleCommentSubmit = () => {
             // Make the API call to submit the comment using the `post` function
@@ -50,16 +73,57 @@ export default {
                 },
             });
         };
+        const handleDeleteIssueSubmit = () => {
+            // Make the API call to submit the comment using the `post` function
+            deleteIssueForm.post(route("issues.destroy"), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Reset the form after success
+                    deleteIssueForm.reset();
 
+                    // Log
+                    console.log("Issue deleted " + props.issue.id);
+                },
+                onError: () => {
+                    // Log
+                    console.log("Error deleting issue " + props.issue.id);
+                },
+                onFinish: () => {
+                    // Log
+                    console.log("Finished deleting issue " + props.issue.id);
+                },
+            });
+        };
+
+        // Reset forms
         const resetCommentForm = () => {
-            // Reset the form using the `reset` function
             commentForm.reset();
+        };
+        const resetDeleteIssueForm = () => {
+            deleteIssueForm.reset();
+        };
+
+        // Close modals
+        const closeModal = () => {
+            deletingIssue.value = false;
         };
 
         return {
+            // Modals
+            deletingIssue,
+            // Inputs
+            issueToDelete,
+            // Forms
             commentForm,
+            deleteIssueForm,
+            // Actions
+            deleteIssue,
             handleCommentSubmit,
+            handleDeleteIssueSubmit,
             resetCommentForm,
+            resetDeleteIssueForm,
+            // Close modals
+            closeModal,
         };
     },
     methods: {
@@ -127,19 +191,17 @@ export default {
         >
             Open Issue
         </Link>
-        <Link
+        <a
             class="btn btn-sm btn-danger delete_data rounded col-auto"
-            type="button"
-            :href="route('issues.destroy', issue.id)"
-            method="delete"
-            as="button"
             v-if="
                 $page.props.auth.user.type == 1 ||
                 $page.props.auth.user.id == issue.user_id
             "
+            :data-id="issue.id"
+            @click="deleteIssue(issue)"
         >
             Delete Issue
-        </Link>
+        </a>
     </div>
 
     <!-- Issue -->
@@ -293,6 +355,94 @@ export default {
             </div>
         </div>
     </div>
+
+    <!-- Delete modal -->
+    <Modal :show="deletingIssue" @close="closeModal">
+        <div class="p-6">
+            <h2 class="text-2xl font-bold text-gray-900">Delete Issue</h2>
+            <p class="mt-2 text-sm text-gray-600">
+                Are you sure you want to delete this issue?
+            </p>
+            <InputError :message="deleteIssueForm.errors.issue" class="mt-2" />
+            <hr class="mt-4" />
+            <form @submit.prevent="handleDeleteIssueSubmit">
+                <!-- Title -->
+                <div class="mt-4">
+                    <label
+                        for="title"
+                        class="block text-sm font-medium text-gray-700"
+                        >Title</label
+                    >
+                    <input
+                        id="title"
+                        v-model="deleteIssueForm.title"
+                        type="text"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+                        placeholder="Enter title here"
+                        readonly
+                    />
+                    <InputError
+                        :message="deleteIssueForm.errors.id"
+                        class="mt-2"
+                    />
+                </div>
+
+                <!-- Id -->
+                <div class="mt-4">
+                    <label
+                        for="id"
+                        class="block text-sm font-medium text-gray-700"
+                        >Id</label
+                    >
+                    <input
+                        id="id"
+                        v-model="deleteIssueForm.id"
+                        type="text"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+                        placeholder="Enter id here"
+                        readonly
+                    />
+                    <InputError
+                        :message="deleteIssueForm.errors.id"
+                        class="mt-2"
+                    />
+                </div>
+
+                <!-- Submit -->
+                <div class="mt-6 text-center flex justify-between">
+                    <button
+                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-gray-600 hover:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring-gray-500 disabled:opacity-50"
+                        @click="closeModal"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-red-600 hover:bg-red-700 focus:outline-none focus:border-red-700 focus:ring-red-500 disabled:opacity-50"
+                        :disabled="deleteIssueForm.processing"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="mr-2"
+                            width="32"
+                            height="32"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                fill="currentColor"
+                                d="M19 6.5l-1.5-1.5-5.5 5.5-5.5-5.5L5 6.5l5.5 5.5-5.5 5.5L6.5 19l5.5-5.5 5.5 5.5L19 17.5l-5.5-5.5Z"
+                            />
+                        </svg>
+
+                        <span v-if="deleteIssueForm.processing">
+                            Processing...
+                        </span>
+                        <span v-else>Delete </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </Modal>
 </template>
 
 <style scoped>

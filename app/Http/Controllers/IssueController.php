@@ -116,17 +116,38 @@ class IssueController extends Controller
     /**
      * Delete issue.
      *
-     * @param int $id The id of the issue
-     * @return void
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
+        // Validate request
+        $id = $request->id;
+        $name = $request->name;
+
+        // Validate request
+        $request->validate(
+            [
+                'id' => 'required|integer|exists:issues,id',
+                'name' => 'required|string|exists:issues,title'
+            ],
+            [
+                'id.required' => 'Please select an issue to delete.',
+                'id.integer' => 'Issue ID must be an integer.',
+                'id.exists' => 'Issue does not exist.',
+                'name.required' => 'Please select an issue to delete.',
+                'name.string' => 'Issue name must be a string.',
+                'name.exists' => 'Issue does not exist.'
+            ]
+        );
+
         // Get issue
         $issue = Issue::findOrFail($id)->load('user', 'department', 'comments');
 
         // Validate if user is authorized to access issue
         if (!$issue || ($issue->user_id !== auth()->user()->id && $issue->department_id !== auth()->user()->department_id && auth()->user()->type !== 1)) {
-            return redirect()->route('issues.index')->with('error', 'This issue does not exist or you are not authorized to access it.');
+            return redirect()->back()->withErrors(['issue' => 'This issue does not exist or you are not authorized to access it.']);
         }
 
         // Delete issue

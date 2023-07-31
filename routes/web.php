@@ -50,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/issues', [IssueController::class, 'store'])->name('issues.store');
     Route::get('/issues/{issue}', [IssueController::class, 'show'])->name('issues.show');
     Route::patch('/issues/{issueId}/status/{statusId}', [IssueController::class, 'updateStatus'])->name('issues.updateStatus');
-    Route::delete('/issues/{issue}', [IssueController::class, 'destroy'])->name('issues.destroy');
+    Route::delete('/issues', [IssueController::class, 'destroy'])->name('issues.destroy');
 
     // Issue Comments
     Route::post('/issues/{issueId}/comments', [IssueCommentsController::class, 'store'])->name('issues.comments.store');
