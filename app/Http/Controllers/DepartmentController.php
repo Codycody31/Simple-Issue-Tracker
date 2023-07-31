@@ -77,6 +77,57 @@ class DepartmentController extends Controller
     }
 
     /**
+     * Update a department
+     * 
+     * @param \Illuminate\Http\Request $request
+     * 
+     * @return \Inertia\Response
+     */
+    public function update(Request $request)
+    {
+        // User
+        $user = auth()->user();
+
+        // If user is not an admin, redirect to dashboard
+        if ($user->type != 1) {
+            return Redirect::route('dashboard')->with('error', 'You are not authorized to view that page.');
+        }
+
+        // Validate input
+        $validated = $request->validate(
+            [
+                'id' => 'required|integer|exists:departments,id',
+                'name' => 'required|string|max:255',
+                'description' => 'required|string|max:255'
+            ],
+            [
+                'id.required' => 'Please select a department to update.',
+                'id.integer' => 'Department ID must be an integer.',
+                'id.exists' => 'Department does not exist.',
+                'name.required' => 'Please enter a department name.',
+                'name.string' => 'Department name must be a string.',
+                'name.max' => 'Department name must not exceed 255 characters.',
+                'description.required' => 'Please enter a department description.',
+                'description.string' => 'Department description must be a string.',
+                'description.max' => 'Department description must not exceed 255 characters.'
+            ]
+        );
+
+        // Get model
+        $department = Department::findOrFail($request->id);
+
+        // Update attributes
+        $department->name = $validated['name'];
+        $department->description = $validated['description'];
+
+        // Save model
+        $department->save();
+
+        // Return response
+        return Redirect::route('departments.index')->with('success', 'Department updated successfully.');
+    }
+
+    /**
      * Delete a department
      * 
      * @param \Illuminate\Http\Request $request
