@@ -124,21 +124,21 @@ class IssueController extends Controller
     {
         // Validate request
         $id = $request->id;
-        $name = $request->name;
+        $title = $request->title;
 
         // Validate request
         $request->validate(
             [
                 'id' => 'required|integer|exists:issues,id',
-                'name' => 'required|string|exists:issues,title'
+                'title' => 'required|string|exists:issues,title'
             ],
             [
                 'id.required' => 'Please select an issue to delete.',
                 'id.integer' => 'Issue ID must be an integer.',
                 'id.exists' => 'Issue does not exist.',
-                'name.required' => 'Please select an issue to delete.',
-                'name.string' => 'Issue name must be a string.',
-                'name.exists' => 'Issue does not exist.'
+                'title.required' => 'Please select an issue to delete.',
+                'title.string' => 'Issue title must be a string.',
+                'title.exists' => 'Issue does not exist.'
             ]
         );
 

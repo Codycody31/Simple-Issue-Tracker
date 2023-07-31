@@ -80,17 +80,10 @@ export default {
                 onSuccess: () => {
                     // Reset the form after success
                     deleteIssueForm.reset();
-
-                    // Log
-                    console.log("Issue deleted " + props.issue.id);
                 },
                 onError: () => {
                     // Log
-                    console.log("Error deleting issue " + props.issue.id);
-                },
-                onFinish: () => {
-                    // Log
-                    console.log("Finished deleting issue " + props.issue.id);
+                    console.log("Error deleting issue: " + props.issue.id);
                 },
             });
         };
