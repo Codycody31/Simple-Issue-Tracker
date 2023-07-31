@@ -23,8 +23,9 @@ export default {
         },
     },
     setup(props) {
-        // Show/hide issue modal
+        // Modals
         const creatingUser = ref(false);
+        const deletingUser = ref(false);
 
         // Inputs
         const userFullNameInput = ref(null);
@@ -34,6 +35,7 @@ export default {
         const userDepartmentInput = ref(null);
         const userDesignationInput = ref(null);
         const userTypeInput = ref(null);
+        const userToDelete = ref(null);
 
         // User form
         const userForm = useForm({
@@ -46,6 +48,13 @@ export default {
             type: 2,
         });
 
+        // Delete user form
+        const deleteUserForm = useForm({
+            _method: "DELETE",
+            id: "",
+            name: "",
+        });
+
         // Create new user
         const createUser = () => {
             creatingUser.value = true;
@@ -53,6 +62,16 @@ export default {
             nextTick(() => {
                 userFullNameInput.value.focus();
             });
+        };
+
+        // Delete user
+        const deleteUser = (user) => {
+            userToDelete.value = user;
+
+            deleteUserForm.id = user.id;
+            deleteUserForm.name = user.fullname;
+
+            deletingUser.value = true;
         };
 
         // Handle Submit
@@ -71,15 +90,31 @@ export default {
             });
         };
 
+        // Handle Delete
+        const handleDelete = () => {
+            deleteUserForm.delete(route("users.destroy"), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Close modal
+                    deletingUser.value = false;
+
+                    // Show success message
+                },
+            });
+        };
+
         // Close modal
         const closeModal = () => {
             creatingUser.value = false;
+            deletingUser.value = false;
 
             userForm.reset();
+            deleteUserForm.reset();
         };
 
         return {
             creatingUser,
+            deletingUser,
             userFullNameInput,
             userEmailInput,
             userContactInput,
@@ -87,9 +122,13 @@ export default {
             userDepartmentInput,
             userDesignationInput,
             userTypeInput,
+            userToDelete,
             userForm,
+            deleteUserForm,
             createUser,
+            deleteUser,
             handleSubmit,
+            handleDelete,
             closeModal,
         };
     },
@@ -180,10 +219,10 @@ export default {
                                     </li>
                                     <li>
                                         <a
-                                            class="dropdown-item delete_data"
+                                            class="dropdown-item delete_data text-danger cursor-pointer"
                                             :data-id="user.id"
                                             :data-name="user.fullname"
-                                            href="javascript:void(0)"
+                                            @click="deleteUser(user)"
                                         >
                                             Delete
                                         </a>
@@ -438,6 +477,72 @@ export default {
                             </svg>
 
                             Create User
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </Modal>
+
+        <!-- Delete user modal -->
+        <Modal :show="deletingUser" @close="closeModal">
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-gray-900">
+                    Delete User Confirmation
+                </h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    Are you sure you want to delete this user?
+                </p>
+                <!-- User Errors -->
+                <InputError
+                    :message="deleteUserForm.errors.user"
+                    class="mt-2"
+                />
+                <hr class="mt-4" />
+                <form @submit.prevent="handleDelete">
+                    <!-- ID -->
+                    <input
+                        type="hidden"
+                        name="id"
+                        v-model="deleteUserForm.id"
+                    />
+
+                    <!-- Name -->
+                    <input
+                        type="hidden"
+                        name="name"
+                        v-model="deleteUserForm.name"
+                    />
+
+                    <!-- Submit -->
+                    <div class="mt-6 text-center flex justify-between">
+                        <button
+                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-gray-600 hover:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring-gray-500 disabled:opacity-50"
+                            @click="closeModal"
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-red-600 hover:bg-red-700 focus:outline-none focus:border-red-700 focus:ring-red-500 disabled:opacity-50"
+                            :disabled="deleteUserForm.processing"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="mr-2"
+                                width="32"
+                                height="32"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M19 6.5l-1.5-1.5-5.5 5.5-5.5-5.5L5 6.5l5.5 5.5-5.5 5.5L6.5 19l5.5-5.5 5.5 5.5L19 17.5l-5.5-5.5Z"
+                                />
+                            </svg>
+
+                            <span v-if="deleteUserForm.processing">
+                                Processing...
+                            </span>
+                            <span v-else>Delete </span>
                         </button>
                     </div>
                 </form>

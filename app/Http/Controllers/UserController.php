@@ -99,4 +99,61 @@ class UserController extends Controller
         // Redirect to users page
         return Redirect::route('users.index')->with('success', 'User created successfully.');
     }
+
+    /**
+     * Delete a user
+     * 
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete(Request $request)
+    {
+        // User
+        $user = auth()->user();
+
+        // If user is not an admin, redirect to dashboard
+        if ($user->type != 1) {
+            return Redirect::route('dashboard')->with('error', 'You are not authorized to view that page.');
+        }
+
+        // Validate request
+        $request->validate(
+            [
+                'id' => 'required|integer|exists:users,id',
+                'name' => 'required|string|exists:users,fullname'
+            ],
+            [
+                'id.required' => 'Please select a user to delete.',
+                'id.integer' => 'User ID must be an integer.',
+                'id.exists' => 'User does not exist.',
+                'name.required' => 'Please select a user to delete.',
+                'name.string' => 'User name must be a string.',
+                'name.exists' => 'User does not exist.'
+            ]
+        );
+
+        // Get user
+        $delUser = User::find($request->id);
+
+        // If user does not exist, redirect to users index page
+        if (!$delUser) {
+            return redirect()->back()->withErrors(['user' => 'User does not exist.']);
+        }
+
+        // Delete user comments and issues
+        $delUser->comments()->delete();
+        $delUser->issues()->delete();
+
+        // Delete user
+        $delUser->delete();
+
+        // If user is not deleted, redirect back with error
+        if ($delUser->exists) {
+            return redirect()->back()->withErrors(['user' => 'User could not be deleted.']);
+        }
+
+        // Redirect to users index page
+        return Redirect::route('users.index')->with('success', 'User deleted successfully.');
+    }
 }
