@@ -21,7 +21,7 @@ export default {
         },
     },
     setup() {
-        // Modals.
+        // State
         const showDepartmentModal = ref(false);
         const ShowEditModal = ref(false);
         const showDeleteModal = ref(false);
@@ -31,36 +31,27 @@ export default {
         const departmentDescription = ref(null);
         const departmentToDelete = ref(null);
 
-        // Department form.
+        // Forms
         const departmentForm = useForm({
             id: "",
             name: "",
             description: "",
         });
-
-        // Delete department form.
         const deleteDepartmentForm = useForm({
             _method: "DELETE",
             id: "",
             name: "",
         });
 
-        // Create department.
+        // Methods
         const createDepartment = () => {
-            // Show department modal.
             showDepartmentModal.value = true;
-
             nextTick(() => {
                 departmentName.value.focus();
             });
         };
-
-        // Edit department.
         const editDepartment = (department) => {
-            // Show department modal.
             ShowEditModal.value = true;
-
-            // Set the department ID to be edited.
             departmentForm.id = department.id;
             departmentForm.name = department.name;
             departmentForm.description = department.description;
@@ -69,18 +60,13 @@ export default {
                 departmentName.value.focus();
             });
         };
-
-        // Delete department.
         const deleteDepartment = (department) => {
-            // Show delete confirmation modal.
             showDeleteModal.value = true;
-
-            // Set the department ID to be deleted.
             deleteDepartmentForm.id = department.id;
             deleteDepartmentForm.name = department.name;
         };
 
-        // Create department.
+        // Handlers
         const handleDepartmentSubmit = () => {
             departmentForm.post(route("departments.store"), {
                 preserveScroll: true,
@@ -106,8 +92,6 @@ export default {
                 },
             });
         };
-
-        // Update department.
         const handleDepartmentUpdate = () => {
             departmentForm.patch(route("departments.update"), {
                 preserveScroll: true,
@@ -133,57 +117,48 @@ export default {
                 },
             });
         };
-
-        // Close modal.
-        const closeModal = () => {
-            showDepartmentModal.value = false;
-            ShowEditModal.value = false;
-            showDeleteModal.value = false;
-
-            departmentForm.reset();
-            deleteDepartmentForm.reset();
-        };
-
-        // Confirm delete.
-        const confirmDelete = () => {
-            // Make an API call to delete the department
+        const handleDepartmentDelete = () => {
             deleteDepartmentForm.delete(route("departments.destroy"), {
                 preserveScroll: true,
                 onSuccess: () => {
-                    // Close the delete confirmation modal
                     closeModal();
-
-                    // Log
-                    console.log("Department deleted successfully!");
                 },
                 onError: () => {
-                    // Log
                     console.log("Error deleting department!");
-                },
-                onFinish: () => {
-                    // Log
-                    console.log("Finished submitting form.");
                 },
             });
         };
 
+        const closeModal = () => {
+            showDepartmentModal.value = false;
+            ShowEditModal.value = false;
+            showDeleteModal.value = false;
+            departmentForm.reset();
+            deleteDepartmentForm.reset();
+        };
+
         // Return.
         return {
+            // State
             showDepartmentModal,
             ShowEditModal,
+            showDeleteModal,
+            // Inputs
             departmentName,
             departmentDescription,
+            departmentToDelete,
+            // Forms
             departmentForm,
             deleteDepartmentForm,
+            // Methods
             createDepartment,
-            handleDepartmentSubmit,
-            handleDepartmentUpdate,
-            closeModal,
-            showDeleteModal,
-            departmentToDelete,
             editDepartment,
             deleteDepartment,
-            confirmDelete,
+            // Handlers
+            handleDepartmentSubmit,
+            handleDepartmentUpdate,
+            handleDepartmentDelete,
+            closeModal,
         };
     },
 };
@@ -379,7 +354,7 @@ export default {
                 <!-- Department Errors -->
                 <InputError :message="deleteDepartmentForm.errors.department" class="mt-2" />
                 <hr class="mt-4" />
-                <form @submit.prevent="confirmDelete">
+                <form @submit.prevent="handleDepartmentDelete">
                     <!-- Name -->
                     <div class="mt-4">
                         <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
