@@ -30,6 +30,10 @@ export default {
 
         // Forms
         const commentForm = useForm({
+            comment: "",
+        });
+        const editCommentForm = useForm({
+            _method: "patch",
             id: "",
             comment: "",
         });
@@ -46,29 +50,14 @@ export default {
             deleteIssueForm.title = user.title;
             deletingIssue.value = true;
         };
-        const saveEditedComment = () => {
-            // Make the API call to update the comment using the `put` function
-            commentForm.patch(route("issues.comments.update", [props.issue.id]), {
-                preserveScroll: true,
-                onSuccess: () => {
-                    // Reset the form after success
-                    commentForm.reset();
-                    cancelEditing();
-                },
-                onError: () => {
-                    // Log
-                    console.log("Error updating comment for issue " + props.issue.id);
-                },
-            });
-        };
         const editComment = (comment) => {
             editingComment.value = comment.id;
-            commentForm.id = comment.id;
-            commentForm.comment = comment.comment;
+            editCommentForm.id = comment.id;
+            editCommentForm.comment = comment.comment;
         };
         const cancelEditing = () => {
             editingComment.value = null;
-            commentForm.reset();
+            editCommentForm.reset();
         };
 
         const handleCommentSubmit = () => {
@@ -96,6 +85,21 @@ export default {
                         "Finished submitting comment for issue " +
                         props.issue.id
                     );
+                },
+            });
+        };
+        const handleCommentEditSubmit = () => {
+            // Make the API call to update the comment using the `put` function
+            editCommentForm.patch(route("issues.comments.update", [props.issue.id]), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Reset the form after success
+                    commentForm.reset();
+                    cancelEditing();
+                },
+                onError: () => {
+                    // Log
+                    console.log("Error updating comment for issue " + props.issue.id);
                 },
             });
         };
@@ -135,10 +139,11 @@ export default {
             issueToDelete,
             // Forms
             commentForm,
+            editCommentForm,
             deleteIssueForm,
             // Actions
             deleteIssue,
-            saveEditedComment,
+            handleCommentEditSubmit,
             editComment,
             cancelEditing,
             handleCommentSubmit,
@@ -259,32 +264,34 @@ export default {
                         :key="comment.id">
                         <!-- Edit comment -->
                         <div v-if="editingComment === comment.id">
-                            <textarea v-model="commentForm.comment" rows="4"
+                            <div class="flex justify-between">
+                                <div>
+                                    <h6 class="mb-0">
+                                        <b>{{ comment.user.fullname }}</b>
+                                    </h6>
+                                    <p class="mb-0 text-muted">
+                                        {{ formatDate(comment.created_at) }}
+                                    </p>
+                                </div>
+                                <div v-if="$page.props.auth.user.type == 1 || $page.props.auth.user.id == comment.user_id">
+                                    <button type="button" class="btn btn-sm btn-danger me-2" @click="cancelEditing()">
+                                        Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-primary"
+                                        :disabled="editCommentForm.processing" @click="handleCommentEditSubmit(comment)">
+                                        <span v-if="editCommentForm.processing">
+                                            Saving...
+                                        </span>
+                                        <span v-else>
+                                            Save
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                            <textarea v-model="editCommentForm.comment" rows="4"
                                 class="form-control resize-none w-full rounded-lg px-3 py-2 bg-white shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 required placeholder="Write your comment here."></textarea>
-                            <InputError :message="commentForm.errors.comment" class="mt-2 text-red-500" />
-                            <div class="mt-4 flex justify-end space-x-2">
-                                <button
-                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-sm text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                                    type="button" @click="cancelEditing()">
-                                    Cancel
-                                </button>
-
-                                <button
-                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                    :disabled="commentForm.processing" @click="saveEditedComment(comment)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="32" height="32"
-                                        viewBox="0 0 24 24">
-                                        <path fill="currentColor" d="m10 16.4l-4-4L7.4 11l2.6 2.6L16.6 7L18 8.4l-8 8Z" />
-                                    </svg>
-                                    <span v-if="commentForm.processing">
-                                        Saving...
-                                    </span>
-                                    <span v-else>
-                                        Save
-                                    </span>
-                                </button>
-                            </div>
+                            <InputError :message="editCommentForm.errors.comment" class="mt-2 text-red-500" />
                         </div>
 
                         <!-- Comment -->
