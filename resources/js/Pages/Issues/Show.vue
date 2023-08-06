@@ -23,12 +23,14 @@ export default {
     setup(props) {
         // Modals
         const deletingIssue = ref(null);
+        const editingComment = ref(null);
 
         // Inputs
         const issueToDelete = ref(null);
 
         // Forms
         const commentForm = useForm({
+            id: "",
             comment: "",
         });
         const deleteIssueForm = useForm({
@@ -43,6 +45,30 @@ export default {
             deleteIssueForm.id = user.id;
             deleteIssueForm.title = user.title;
             deletingIssue.value = true;
+        };
+        const saveEditedComment = () => {
+            // Make the API call to update the comment using the `put` function
+            commentForm.patch(route("issues.comments.update", [props.issue.id]), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Reset the form after success
+                    commentForm.reset();
+                    cancelEditing();
+                },
+                onError: () => {
+                    // Log
+                    console.log("Error updating comment for issue " + props.issue.id);
+                },
+            });
+        };
+        const editComment = (comment) => {
+            editingComment.value = comment.id;
+            commentForm.id = comment.id;
+            commentForm.comment = comment.comment;
+        };
+        const cancelEditing = () => {
+            editingComment.value = null;
+            commentForm.reset();
         };
 
         const handleCommentSubmit = () => {
@@ -68,7 +94,7 @@ export default {
                     // Log
                     console.log(
                         "Finished submitting comment for issue " +
-                            props.issue.id
+                        props.issue.id
                     );
                 },
             });
@@ -104,6 +130,7 @@ export default {
         return {
             // Modals
             deletingIssue,
+            editingComment,
             // Inputs
             issueToDelete,
             // Forms
@@ -111,6 +138,9 @@ export default {
             deleteIssueForm,
             // Actions
             deleteIssue,
+            saveEditedComment,
+            editComment,
+            cancelEditing,
             handleCommentSubmit,
             handleDeleteIssueSubmit,
             resetCommentForm,
@@ -156,43 +186,23 @@ export default {
 
     <!-- Issue actions -->
     <div class="row justify-content-end px-3 mb-2">
-        <Link
-            class="btn btn-sm btn-primary me-2 close_issue rounded col-auto"
-            type="button"
-            :href="route('issues.updateStatus', [issue.id, 1])"
-            method="patch"
-            as="button"
-            v-if="
-                ($page.props.auth.user.type == 1 && issue.status == 0) ||
+        <Link class="btn btn-sm btn-primary me-2 close_issue rounded col-auto" type="button"
+            :href="route('issues.updateStatus', [issue.id, 1])" method="patch" as="button" v-if="($page.props.auth.user.type == 1 && issue.status == 0) ||
                 ($page.props.auth.user.department_id == issue.department_id &&
                     issue.status == 0)
-            "
-        >
-            Close Issue
+                ">
+        Close Issue
         </Link>
-        <Link
-            class="btn btn-sm btn-success me-2 open_issue rounded col-auto"
-            type="button"
-            :href="route('issues.updateStatus', [issue.id, 0])"
-            method="patch"
-            as="button"
-            v-if="
-                ($page.props.auth.user.type == 1 && issue.status == 1) ||
+        <Link class="btn btn-sm btn-success me-2 open_issue rounded col-auto" type="button"
+            :href="route('issues.updateStatus', [issue.id, 0])" method="patch" as="button" v-if="($page.props.auth.user.type == 1 && issue.status == 1) ||
                 ($page.props.auth.user.department_id == issue.department_id &&
                     issue.status == 1)
-            "
-        >
-            Open Issue
+                ">
+        Open Issue
         </Link>
-        <a
-            class="btn btn-sm btn-danger delete_data rounded col-auto"
-            v-if="
-                $page.props.auth.user.type == 1 ||
-                $page.props.auth.user.id == issue.user_id
-            "
-            :data-id="issue.id"
-            @click="deleteIssue(issue)"
-        >
+        <a class="btn btn-sm btn-danger delete_data rounded col-auto" v-if="$page.props.auth.user.type == 1 ||
+            $page.props.auth.user.id == issue.user_id
+            " :data-id="issue.id" @click="deleteIssue(issue)">
             Delete Issue
         </a>
     </div>
@@ -206,23 +216,18 @@ export default {
                     <div class="row">
                         <div class="col-sm-6">
                             <p>
-                                <small class="text-muted">Posted by:</small
-                                ><br />
+                                <small class="text-muted">Posted by:</small><br />
                                 <b>{{ issue.user.fullname }}</b>
                             </p>
                             <p>
-                                <small class="text-muted">Posted for:</small
-                                ><br />
+                                <small class="text-muted">Posted for:</small><br />
                                 <b>{{ issue.department.name }}</b>
                             </p>
                         </div>
                         <div class="col-sm-6">
                             <p>
                                 <small class="text-muted">Status:</small><br />
-                                <span
-                                    class="badge bg-success"
-                                    v-if="issue.status == 0"
-                                >
+                                <span class="badge bg-success" v-if="issue.status == 0">
                                     Open
                                 </span>
                                 <span class="badge bg-danger" v-else>
@@ -230,17 +235,13 @@ export default {
                                 </span>
                             </p>
                             <p>
-                                <small class="text-muted">Date Posted:</small
-                                ><br />
+                                <small class="text-muted">Date Posted:</small><br />
                                 {{ formatDate(issue.created_at) }}
                             </p>
                         </div>
                     </div>
                     <hr class="my-4" />
-                    <div
-                        class="md-html"
-                        v-html="nl2br(issue.description)"
-                    ></div>
+                    <div class="md-html" v-html="nl2br(issue.description)"></div>
                 </div>
             </div>
         </div>
@@ -254,59 +255,65 @@ export default {
                 <h5><b>Comments:</b></h5>
                 <hr />
                 <ul class="list-group">
-                    <li
-                        class="list-group-item p-3 mb-3 border comment-item"
-                        v-for="comment in issue.comments"
-                        :key="comment.id"
-                    >
-                        <div class="border-bottom border-dark">
-                            <p class="m-0">
-                                <b>{{ comment.user.fullname }}</b>
-                            </p>
-                            <small>
-                                {{ formatDate(comment.created_at) }}
-                            </small>
-                        </div>
-                        <div class="pl-4 py-3 comment-field">
-                            <p class="m-0">{{ comment.comment }}</p>
-                        </div>
-                        <div class="row justify-content-end px-3">
-                            <div
-                                class="col-auto"
-                                v-if="
-                                    comment.user_id ==
-                                        $page.props.auth.user.id ||
-                                    $page.props.auth.user.type == 1
-                                "
-                            >
+                    <li class="list-group-item p-3 mb-3 border comment-item" v-for="comment in issue.comments"
+                        :key="comment.id">
+                        <!-- Edit comment -->
+                        <div v-if="editingComment === comment.id">
+                            <textarea v-model="commentForm.comment" rows="4"
+                                class="form-control resize-none w-full rounded-lg px-3 py-2 bg-white shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                required placeholder="Write your comment here."></textarea>
+                            <InputError :message="commentForm.errors.comment" class="mt-2 text-red-500" />
+                            <div class="mt-4 flex justify-end space-x-2">
                                 <button
-                                    class="btn btn-sm btn-primary rounded me-2"
-                                    type="button"
-                                    :data-id="comment.id"
-                                >
-                                    Edit
+                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-sm text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                                    type="button" @click="cancelEditing()">
+                                    Cancel
                                 </button>
-                                <Link
-                                    class="btn btn-sm btn-danger rounded"
-                                    type="button"
-                                    :href="
-                                        route('issues.comments.destroy', [
-                                            issue.id,
-                                            comment.id,
-                                        ])
-                                    "
-                                    method="delete"
-                                    as="button"
-                                >
+
+                                <button
+                                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                    :disabled="commentForm.processing" @click="saveEditedComment(comment)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="32" height="32"
+                                        viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="m10 16.4l-4-4L7.4 11l2.6 2.6L16.6 7L18 8.4l-8 8Z" />
+                                    </svg>
+                                    <span v-if="commentForm.processing">
+                                        Saving...
+                                    </span>
+                                    <span v-else>
+                                        Save
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Comment -->
+                        <div v-else>
+                            <div class="border-bottom border-dark">
+                            </div>
+                            <div class="pl-4 py-3 comment-field">
+                                <p class="m-0">{{ comment.comment }}</p>
+                            </div>
+                            <div class="row justify-content-end px-3">
+                                <div class="col-auto" v-if="comment.user_id == $page.props.auth.user.id ||
+                                    $page.props.auth.user.type == 1
+                                    ">
+                                    <button class="btn btn-sm btn-primary rounded me-2" type="button" :data-id="comment.id"
+                                        @click="editComment(comment)">
+                                        Edit
+                                    </button>
+                                    <Link class="btn btn-sm btn-danger rounded" type="button" :href="route('issues.comments.destroy', [
+                                        issue.id,
+                                        comment.id,
+                                    ])
+                                        " method="delete" as="button">
                                     Delete
-                                </Link>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </li>
-                    <li
-                        class="text-center list-group-item"
-                        v-if="!issue.comments || issue.comments.length === 0"
-                    >
+                    <li class="text-center list-group-item" v-if="!issue.comments || issue.comments.length === 0">
                         No comments listed yet.
                     </li>
                 </ul>
@@ -318,29 +325,15 @@ export default {
             <div class="col-md-8">
                 <form id="comment-form" @submit.prevent="handleCommentSubmit">
                     <div class="form-group">
-                        <textarea
-                            v-model="commentForm.comment"
-                            name="comment"
-                            id="comment"
-                            rows="4"
-                            class="form-control rounded-1"
-                            required
-                            placeholder="Write your comment here."
-                        ></textarea>
+                        <textarea v-model="commentForm.comment" name="comment" id="comment" rows="4"
+                            class="form-control rounded-1" required placeholder="Write your comment here."></textarea>
                         <InputError :message="commentForm.errors.comment" />
                     </div>
                     <div class="form-group row justify-content-end py-2 px-3">
-                        <button
-                            class="btn btn-sm rounded btn-success col-auto me-2"
-                            :disabled="commentForm.processing"
-                        >
+                        <button class="btn btn-sm rounded btn-success col-auto me-2" :disabled="commentForm.processing">
                             Save
                         </button>
-                        <button
-                            class="btn btn-sm rounded btn-secondary col-auto"
-                            type="button"
-                            @click="resetCommentForm"
-                        >
+                        <button class="btn btn-sm rounded btn-secondary col-auto" type="button" @click="resetCommentForm">
                             Reset
                         </button>
                     </div>
@@ -361,70 +354,36 @@ export default {
             <form @submit.prevent="handleDeleteIssueSubmit">
                 <!-- Title -->
                 <div class="mt-4">
-                    <label
-                        for="title"
-                        class="block text-sm font-medium text-gray-700"
-                        >Title</label
-                    >
-                    <input
-                        id="title"
-                        v-model="deleteIssueForm.title"
-                        type="text"
+                    <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                    <input id="title" v-model="deleteIssueForm.title" type="text"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
-                        placeholder="Enter title here"
-                        readonly
-                    />
-                    <InputError
-                        :message="deleteIssueForm.errors.id"
-                        class="mt-2"
-                    />
+                        placeholder="Enter title here" readonly />
+                    <InputError :message="deleteIssueForm.errors.id" class="mt-2" />
                 </div>
 
                 <!-- Id -->
                 <div class="mt-4">
-                    <label
-                        for="id"
-                        class="block text-sm font-medium text-gray-700"
-                        >Id</label
-                    >
-                    <input
-                        id="id"
-                        v-model="deleteIssueForm.id"
-                        type="text"
+                    <label for="id" class="block text-sm font-medium text-gray-700">Id</label>
+                    <input id="id" v-model="deleteIssueForm.id" type="text"
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
-                        placeholder="Enter id here"
-                        readonly
-                    />
-                    <InputError
-                        :message="deleteIssueForm.errors.id"
-                        class="mt-2"
-                    />
+                        placeholder="Enter id here" readonly />
+                    <InputError :message="deleteIssueForm.errors.id" class="mt-2" />
                 </div>
 
                 <!-- Submit -->
                 <div class="mt-6 text-center flex justify-between">
                     <button
                         class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-gray-600 hover:bg-gray-700 focus:outline-none focus:border-gray-700 focus:ring-gray-500 disabled:opacity-50"
-                        @click="closeModal"
-                    >
+                        @click="closeModal">
                         Cancel
                     </button>
 
                     <button
                         class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-red-600 hover:bg-red-700 focus:outline-none focus:border-red-700 focus:ring-red-500 disabled:opacity-50"
-                        :disabled="deleteIssueForm.processing"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="mr-2"
-                            width="32"
-                            height="32"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                fill="currentColor"
-                                d="M19 6.5l-1.5-1.5-5.5 5.5-5.5-5.5L5 6.5l5.5 5.5-5.5 5.5L6.5 19l5.5-5.5 5.5 5.5L19 17.5l-5.5-5.5Z"
-                            />
+                        :disabled="deleteIssueForm.processing">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2" width="32" height="32" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M19 6.5l-1.5-1.5-5.5 5.5-5.5-5.5L5 6.5l5.5 5.5-5.5 5.5L6.5 19l5.5-5.5 5.5 5.5L19 17.5l-5.5-5.5Z" />
                         </svg>
 
                         <span v-if="deleteIssueForm.processing">
