@@ -58,7 +58,7 @@ class IssueCommentsController extends Controller
     {
         // Get comment id
         $commentId = $request->id;
-        
+
         // Validate request
         $request->validate(
             [
@@ -98,11 +98,14 @@ class IssueCommentsController extends Controller
      * Delete comment.
      *
      * @param int $issueId The issue id
-     * @param int $commentId The comment id
+     * @param Request $request The request
      * @return void
      */
-    public function destroy($issueId, $commentId)
+    public function destroy($issueId, Request $request)
     {
+        // Get comment id
+        $commentId = $request->id;
+
         // Get issue
         $issue = Issue::findOrFail($issueId)->load('user', 'department');
 

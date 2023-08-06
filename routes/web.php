@@ -57,7 +57,7 @@ Route::middleware(['auth'])->group(function () {
     // Issue Comments
     Route::post('/issues/{issueId}/comments', [IssueCommentsController::class, 'store'])->name('issues.comments.store');
     Route::patch('/issues/{issueId}/comments', [IssueCommentsController::class, 'update'])->name('issues.comments.update');
-    Route::delete('/issues/{issueId}/comments/{commentId}', [IssueCommentsController::class, 'destroy'])->name('issues.comments.destroy');
+    Route::delete('/issues/{issueId}/comments', [IssueCommentsController::class, 'destroy'])->name('issues.comments.destroy');
     
     // Profile
     Route::get('/manage-account', [ProfileController::class, 'edit'])->name('profile.edit');
