@@ -27,6 +27,7 @@ class DashboardController extends Controller
         // If user is admin, get all issues
         if ($user->type === 1) {
             $issues = Issue::limit(5)
+                ->latest()
                 ->get()
                 ->load('user', 'department');
         }
@@ -35,6 +36,7 @@ class DashboardController extends Controller
             $issues = Issue::where('user_id', $user->id)
                 ->orWhere('department_id', $user->department_id)
                 ->limit(5)
+                ->latest()
                 ->get()
                 ->load('user', 'department');
         }
