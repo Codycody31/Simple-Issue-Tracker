@@ -2,6 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import DeleteUserForm from "./Partials/DeleteUserForm.vue";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm.vue";
+import EmployeeInformation from "./Partials/EmployeeInformation.vue";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm.vue";
 import { Head } from "@inertiajs/vue3";
 
@@ -11,11 +12,13 @@ export default {
         DeleteUserForm,
         Head,
         UpdatePasswordForm,
+        EmployeeInformation,
         UpdateProfileInformationForm,
     },
     props: {
         mustVerifyEmail: Boolean,
         status: String,
+        user: Object,
     },
     layout: AuthenticatedLayout,
 };
@@ -33,6 +36,15 @@ export default {
                     :must-verify-email="mustVerifyEmail"
                     :status="status"
                     class="max-w-xl"
+                />
+            </div>
+
+            <!-- Employee information: department and  Designation-->
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <EmployeeInformation
+                    :status="status"
+                    class="max-w-xl"
+                    :user="user"
                 />
             </div>
 
