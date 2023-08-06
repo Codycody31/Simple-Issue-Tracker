@@ -256,94 +256,98 @@ export default {
     <div class="py-3">
         <!-- Comments -->
         <div class="row mb-2">
-            <div class="col-md-8">
-                <h5><b>Comments:</b></h5>
-                <hr />
-                <ul class="list-group">
-                    <li class="list-group-item p-3 mb-3 border comment-item" v-for="comment in issue.comments"
-                        :key="comment.id">
-                        <!-- Edit comment -->
-                        <div v-if="editingComment === comment.id">
-                            <div class="flex justify-between">
-                                <div>
-                                    <h6 class="mb-0">
-                                        <b>{{ comment.user.fullname }}</b>
-                                    </h6>
-                                    <p class="mb-0 text-muted">
-                                        {{ formatDate(comment.created_at) }}
-                                    </p>
-                                </div>
-                                <div v-if="$page.props.auth.user.type == 1 || $page.props.auth.user.id == comment.user_id">
-                                    <button type="button" class="btn btn-sm btn-danger me-2" @click="cancelEditing()">
-                                        Cancel
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-primary"
-                                        :disabled="editCommentForm.processing" @click="handleCommentEditSubmit(comment)">
-                                        <span v-if="editCommentForm.processing">
-                                            Saving...
-                                        </span>
-                                        <span v-else>
-                                            Save
-                                        </span>
-                                    </button>
-                                </div>
+            <h5><b>Comments:</b></h5>
+            <hr />
+            <ul class="list-group">
+                <li class="list-group-item p-3 mb-3 border comment-item" v-for="comment in issue.comments"
+                    :key="comment.id">
+                    <!-- Edit comment -->
+                    <div v-if="editingComment === comment.id">
+                        <div class="flex justify-between">
+                            <div>
+                                <h6 class="mb-0">
+                                    <b>{{ comment.user.fullname }}</b>
+                                </h6>
+                                <p class="mb-0 text-muted">
+                                    {{ formatDate(comment.created_at) }}
+                                </p>
                             </div>
-                            <textarea v-model="editCommentForm.comment" rows="4"
-                                class="form-control resize-none w-full rounded-lg px-3 py-2 bg-white shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                                required placeholder="Write your comment here."></textarea>
-                            <InputError :message="editCommentForm.errors.comment" class="mt-2 text-red-500" />
+                            <div v-if="$page.props.auth.user.type == 1 || $page.props.auth.user.id == comment.user_id">
+                                <button type="button" class="btn btn-sm btn-danger me-2" @click="cancelEditing()">
+                                    Cancel
+                                </button>
+                                <button type="button" class="btn btn-sm btn-primary" :disabled="editCommentForm.processing"
+                                    @click="handleCommentEditSubmit(comment)">
+                                    <span v-if="editCommentForm.processing">
+                                        Saving...
+                                    </span>
+                                    <span v-else>
+                                        Save
+                                    </span>
+                                </button>
+                            </div>
                         </div>
+                        <textarea v-model="editCommentForm.comment" rows="4"
+                            class="form-control resize-none w-full rounded-lg px-3 py-2 bg-white shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            required placeholder="Write your comment here."></textarea>
+                        <InputError :message="editCommentForm.errors.comment" class="mt-2 text-red-500" />
+                    </div>
 
-                        <!-- Comment -->
-                        <div v-else>
-                            <div class="flex justify-between">
-                                <div>
-                                    <h6 class="mb-0">
-                                        <b>{{ comment.user.fullname }}</b>
-                                    </h6>
-                                    <p class="mb-0 text-muted">
-                                        {{ formatDate(comment.created_at) }}
-                                    </p>
-                                </div>
-                                <div v-if="$page.props.auth.user.type == 1 || $page.props.auth.user.id == comment.user_id">
-                                    <button type="button" class="btn btn-sm btn-secondary me-2"
-                                        @click="editComment(comment)">
-                                        Edit
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-danger" @click="deleteComment(comment)">
-                                        Delete
-                                    </button>
-                                </div>
+                    <!-- Comment -->
+                    <div v-else>
+                        <div class="flex justify-between">
+                            <div>
+                                <h6 class="mb-0">
+                                    <b>{{ comment.user.fullname }}</b>
+                                </h6>
+                                <p class="mb-0 text-muted">
+                                    {{ formatDate(comment.created_at) }}
+                                </p>
                             </div>
-                            <div class="md-html mt-2" v-html="nl2br(comment.comment)"></div>
+                            <div v-if="$page.props.auth.user.type == 1 || $page.props.auth.user.id == comment.user_id">
+                                <button type="button" class="btn btn-sm btn-secondary me-2" @click="editComment(comment)">
+                                    Edit
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" @click="deleteComment(comment)">
+                                    Delete
+                                </button>
+                            </div>
                         </div>
-                    </li>
-                    <li class="text-center list-group-item" v-if="!issue.comments || issue.comments.length === 0">
-                        No comments listed yet.
-                    </li>
-                </ul>
-            </div>
+                        <div class="md-html mt-2" v-html="nl2br(comment.comment)"></div>
+                    </div>
+                </li>
+                <li class="text-center list-group-item" v-if="!issue.comments || issue.comments.length === 0">
+                    No comments listed yet.
+                </li>
+            </ul>
         </div>
 
         <!-- Comment form -->
-        <div class="row">
-            <div class="col-md-8">
-                <form id="comment-form" @submit.prevent="handleCommentSubmit">
-                    <div class="form-group">
-                        <textarea v-model="commentForm.comment" name="comment" id="comment" rows="4"
-                            class="form-control rounded-1" required placeholder="Write your comment here."></textarea>
-                        <InputError :message="commentForm.errors.comment" />
-                    </div>
-                    <div class="form-group row justify-content-end py-2 px-3">
-                        <button class="btn btn-sm rounded btn-success col-auto me-2" :disabled="commentForm.processing">
+        <div class="row mb-2">
+            <h5><b>Add Comment:</b></h5>
+            <hr />
+            <form @submit.prevent="handleCommentSubmit">
+                <div class="mb-3">
+                    <textarea v-model="commentForm.comment" rows="4"
+                        class="form-control resize-none w-full rounded-lg px-3 py-2 bg-white shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        required placeholder="Write your comment here."></textarea>
+                    <InputError :message="commentForm.errors.comment" class="mt-2 text-red-500" />
+                </div>
+                <div class="flex justify-between">
+                    <button type="button" class="btn btn-sm btn-secondary" @click="resetCommentForm()"
+                        v-if="commentForm.comment">
+                        Reset
+                    </button>
+                    <button type="submit" class="btn btn-sm btn-primary ms-auto" :disabled="commentForm.processing">
+                        <span v-if="commentForm.processing">
+                            Saving...
+                        </span>
+                        <span v-else>
                             Save
-                        </button>
-                        <button class="btn btn-sm rounded btn-secondary col-auto" type="button" @click="resetCommentForm">
-                            Reset
-                        </button>
-                    </div>
-                </form>
-            </div>
+                        </span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
