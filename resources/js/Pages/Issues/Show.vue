@@ -289,28 +289,26 @@ export default {
 
                         <!-- Comment -->
                         <div v-else>
-                            <div class="border-bottom border-dark">
-                            </div>
-                            <div class="pl-4 py-3 comment-field">
-                                <p class="m-0">{{ comment.comment }}</p>
-                            </div>
-                            <div class="row justify-content-end px-3">
-                                <div class="col-auto" v-if="comment.user_id == $page.props.auth.user.id ||
-                                    $page.props.auth.user.type == 1
-                                    ">
-                                    <button class="btn btn-sm btn-primary rounded me-2" type="button" :data-id="comment.id"
+                            <div class="flex justify-between">
+                                <div>
+                                    <h6 class="mb-0">
+                                        <b>{{ comment.user.fullname }}</b>
+                                    </h6>
+                                    <p class="mb-0 text-muted">
+                                        {{ formatDate(comment.created_at) }}
+                                    </p>
+                                </div>
+                                <div v-if="$page.props.auth.user.type == 1 || $page.props.auth.user.id == comment.user_id">
+                                    <button type="button" class="btn btn-sm btn-secondary me-2"
                                         @click="editComment(comment)">
                                         Edit
                                     </button>
-                                    <Link class="btn btn-sm btn-danger rounded" type="button" :href="route('issues.comments.destroy', [
-                                        issue.id,
-                                        comment.id,
-                                    ])
-                                        " method="delete" as="button">
-                                    Delete
-                                    </Link>
+                                    <button type="button" class="btn btn-sm btn-danger" @click="deleteComment(comment)">
+                                        Delete
+                                    </button>
                                 </div>
                             </div>
+                            <div class="md-html mt-2" v-html="nl2br(comment.comment)"></div>
                         </div>
                     </li>
                     <li class="text-center list-group-item" v-if="!issue.comments || issue.comments.length === 0">
