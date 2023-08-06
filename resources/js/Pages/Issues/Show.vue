@@ -332,6 +332,9 @@ export default {
                                 </h6>
                                 <p class="mb-0 text-muted">
                                     {{ formatDate(comment.created_at) }}
+                                    <span v-if="comment.created_at != comment.updated_at">
+                                        (edited)
+                                    </span>
                                 </p>
                             </div>
                             <div v-if="$page.props.auth.user.type == 1 || $page.props.auth.user.id == comment.user_id">
