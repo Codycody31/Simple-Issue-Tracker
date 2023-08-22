@@ -36,6 +36,18 @@ defineProps({
                 <span class="font-bold">Designation: </span>
                 <span>{{ user.designation }}</span>
             </div>
+
+            <!-- Display User's Employee ID -->
+            <div>
+                <span class="font-bold">Employee ID: </span>
+                <span>{{ user.id }}</span>
+            </div>
+
+            <!-- Display User's role -->
+            <div>
+                <span class="font-bold">Role: </span>
+                <span>{{ user.type === 1 ? "Admin" : "Employee" }}</span>
+            </div>
         </div>
     </section>
 </template>
